@@ -20,6 +20,7 @@ IntelliLink.  If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #endif
 
 #include "resource.h"       // main symbols
+#include "sinstance.h"
 
 // CIntelliLinkApp:
 // See IntelliLink.cpp for the implementation of this class
@@ -29,6 +30,9 @@ class CIntelliLinkApp : public CWinAppEx
 {
 public:
 	CIntelliLinkApp();
+
+public:
+	CInstanceChecker m_pInstanceChecker;
 
 // Overrides
 public:

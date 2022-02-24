@@ -329,6 +329,9 @@
     <ClInclude Include="LinkPropertiesDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sinstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IntelliLink.cpp">
@@ -377,6 +380,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LinkPropertiesDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sinstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
