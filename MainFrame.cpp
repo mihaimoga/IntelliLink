@@ -51,10 +51,11 @@ END_MESSAGE_MAP()
 
 CMainFrame::CMainFrame()
 {
+	m_MainButton = NULL;
 	m_pLinkView = NULL;
 	m_hIcons[0] = CTrayNotifyIcon::LoadIcon(IDR_MAINFRAME);
-	// m_hIcons[1] = CTrayNotifyIcon::LoadIcon(IDR_HAPPY);
-	// m_hIcons[2] = CTrayNotifyIcon::LoadIcon(IDR_SAD);
+	m_hIcons[1] = CTrayNotifyIcon::LoadIcon(IDR_HAPPY);
+	m_hIcons[2] = CTrayNotifyIcon::LoadIcon(IDR_SAD);
 }
 
 CMainFrame::~CMainFrame()

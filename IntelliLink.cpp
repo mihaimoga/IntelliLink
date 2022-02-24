@@ -94,7 +94,7 @@ BOOL CIntelliLinkApp::InitInstance()
 	EnableTaskbarInteraction(FALSE);
 
 	// AfxInitRichEdit2() is required to use RichEdit control	
-	// AfxInitRichEdit2();
+	AfxInitRichEdit2();
 
 	// Standard initialization
 	// If you are not using these features and wish to reduce the size
@@ -146,7 +146,7 @@ BOOL CIntelliLinkApp::InitInstance()
 		NULL);
 
 	// The one and only window has been initialized, so show and update it
-	pFrame->ShowWindow(SW_SHOW);
+	pFrame->ShowWindow(SW_HIDE);
 	pFrame->UpdateWindow();
 	// call DragAcceptFiles only if there's a suffix
 	//  In an SDI app, this should occur after ProcessShellCommand
