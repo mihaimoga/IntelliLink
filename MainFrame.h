@@ -19,6 +19,8 @@ IntelliLink.  If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include "LinkView.h"
 #include "NTray.h"
 
+#define TIMER_INTERVAL (10 * 60 * 1000) /* 10 minutes */
+
 class CMainFrame : public CFrameWndEx
 {
 	
@@ -56,6 +58,7 @@ protected:  // control bar embedded members
 	CMFCRibbonStatusBar  m_wndStatusBar;
 	// CChildView    m_wndView;
 	CLinkView*	m_pLinkView;
+	UINT_PTR m_nTimerID;
 
 // Generated message map functions
 protected:
@@ -64,6 +67,7 @@ protected:
 	afx_msg void OnDestroy();
 	afx_msg void OnSetFocus(CWnd *pOldWnd);
 	afx_msg LRESULT OnTrayNotification(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
 	afx_msg void OnLinkRefresh();
 	afx_msg void OnLinkInsert();
@@ -71,6 +75,8 @@ protected:
 	afx_msg void OnLinkRemove();
 	afx_msg void OnUpdateModify(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateRemove(CCmdUI* pCmdUI);
+	afx_msg void OnShowApplication();
+	afx_msg void OnHideApplication();
 
 	DECLARE_MESSAGE_MAP()
 };

@@ -27,6 +27,7 @@ IMPLEMENT_DYNCREATE(CLinkView, CMFCListView)
 	CLinkView::CLinkView()
 {
 	m_bInitialized = FALSE;
+	m_bIsVerified = FALSE;
 	m_pMainFrame = NULL;
 
 	GetListCtrl().m_pLinkSnapshot = &m_pLinkSnapshot;
@@ -175,6 +176,7 @@ BOOL CLinkView::RefreshList()
 {
 	CString strPageRank;
 	CString strListItem;
+	m_bIsVerified = TRUE;
 	GetListCtrl().SetRedraw(FALSE);
 	int nListItem = GetListCtrl().GetNextItem(-1, LVIS_SELECTED | LVIS_FOCUSED);
 	if (nListItem != -1)
@@ -194,6 +196,8 @@ BOOL CLinkView::RefreshList()
 		GetListCtrl().SetItemText(nListItem, 3, strPageRank);
 		GetListCtrl().SetItemText(nListItem, 4, pLinkData->IsValidLink() ? _T("Verified") : _T("Error"));
 		GetListCtrl().SetItemData(nListItem, pLinkData->GetLinkID());
+		if (!pLinkData->IsValidLink())
+			m_bIsVerified = FALSE;
 	}
 	GetListCtrl().Sort(0, TRUE, FALSE);
 	nListItem = 0;
@@ -262,6 +266,11 @@ BOOL CLinkView::IsSelected()
 {
 	int nListItem = GetListCtrl().GetNextItem(-1, LVIS_SELECTED | LVIS_FOCUSED);
 	return (nListItem != -1);
+}
+
+BOOL CLinkView::IsVerified()
+{
+	return m_bIsVerified;
 }
 
 BOOL CLinkView::LoadConfig()

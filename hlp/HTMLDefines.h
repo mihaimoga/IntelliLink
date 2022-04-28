@@ -11,6 +11,8 @@
 #define HID_ANIMATED                            0x18005
 #define HID_MODIFY                              0x18006
 #define HID_HIDE                                0x18006
+#define HID_SHOW_APPLICATION                    0x18008
+#define HID_HIDE_APPLICATION                    0x18009
  
 // Prompts (IDP_*) 
 #define HIDP_OLE_INIT_FAILED                    0x30064

@@ -43,8 +43,11 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND(ID_REMOVE, &CMainFrame::OnLinkRemove)
 	ON_UPDATE_COMMAND_UI(ID_MODIFY, &CMainFrame::OnUpdateModify)
 	ON_UPDATE_COMMAND_UI(ID_REMOVE, &CMainFrame::OnUpdateRemove)
+	ON_COMMAND(ID_SHOW_APPLICATION, &CMainFrame::OnShowApplication)
+	ON_COMMAND(ID_HIDE_APPLICATION, &CMainFrame::OnHideApplication)
 	ON_MESSAGE(WM_TRAYNOTIFY, OnTrayNotification)
 	ON_WM_DESTROY()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -113,6 +116,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		AfxMessageBox(_T("Failed to create tray icon"), MB_OK | MB_ICONSTOP);
 		return -1;
 	}
+	m_nTimerID = SetTimer(1, TIMER_INTERVAL, NULL);
 
 	return 0;
 }
@@ -207,6 +211,22 @@ LRESULT CMainFrame::OnTrayNotification(WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
+void CMainFrame::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+	if (nIDEvent == m_nTimerID)
+	{
+		VERIFY(KillTimer(m_nTimerID));
+		m_pTrayIcon.SetIcon(m_hIcons[0]);
+		ASSERT_VALID(m_pLinkView);
+		VERIFY(m_pLinkView->RefreshList());
+		m_pTrayIcon.SetIcon(m_pLinkView->IsVerified() ? m_hIcons[1] : m_hIcons[2]);
+		m_nTimerID = SetTimer(1, TIMER_INTERVAL, NULL);
+	}
+
+	CFrameWndEx::OnTimer(nIDEvent);
+}
+
 void CMainFrame::OnLinkRefresh()
 {
 	ASSERT_VALID(m_pLinkView);
@@ -244,4 +264,18 @@ void CMainFrame::OnUpdateRemove(CCmdUI* pCmdUI)
 {
 	ASSERT_VALID(m_pLinkView);
 	pCmdUI->Enable(m_pLinkView->IsSelected());
+}
+
+void CMainFrame::OnShowApplication()
+{
+	// The one and only window has been initialized, so show and update it
+	ShowWindow(SW_SHOW);
+	UpdateWindow();
+}
+
+void CMainFrame::OnHideApplication()
+{
+	// The one and only window has been initialized, so hide and update it
+	ShowWindow(SW_HIDE);
+	UpdateWindow();
 }

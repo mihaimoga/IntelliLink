@@ -51,12 +51,14 @@ public:
 	BOOL ModifyLink();
 	BOOL DeleteLink();
 	BOOL IsSelected();
+	BOOL IsVerified();
 
 	BOOL LoadConfig();
 	BOOL SaveConfig();
 
 public:
 	BOOL m_bInitialized;
+	BOOL m_bIsVerified;
 	CMainFrame* m_pMainFrame;
 	CLinkSnapshot m_pLinkSnapshot;
 
