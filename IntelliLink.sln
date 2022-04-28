@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1800
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntelliLink", "IntelliLink.vcxproj", "{381CDF5C-85BD-4681-AD6A-38F8CEB7F0B1}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{193AA3F7-7457-4D29-BDB5-22B21573677B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{381CDF5C-85BD-4681-AD6A-38F8CEB7F0B1}.Release|Win32.Build.0 = Release|Win32
 		{381CDF5C-85BD-4681-AD6A-38F8CEB7F0B1}.Release|x64.ActiveCfg = Release|x64
 		{381CDF5C-85BD-4681-AD6A-38F8CEB7F0B1}.Release|x64.Build.0 = Release|x64
+		{193AA3F7-7457-4D29-BDB5-22B21573677B}.Debug|Win32.ActiveCfg = Debug
+		{193AA3F7-7457-4D29-BDB5-22B21573677B}.Debug|x64.ActiveCfg = Debug
+		{193AA3F7-7457-4D29-BDB5-22B21573677B}.Release|Win32.ActiveCfg = Release
+		{193AA3F7-7457-4D29-BDB5-22B21573677B}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
