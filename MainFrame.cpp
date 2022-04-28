@@ -217,10 +217,7 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 	if (nIDEvent == m_nTimerID)
 	{
 		VERIFY(KillTimer(m_nTimerID));
-		m_pTrayIcon.SetIcon(m_hIcons[0]);
-		ASSERT_VALID(m_pLinkView);
-		VERIFY(m_pLinkView->RefreshList());
-		m_pTrayIcon.SetIcon(m_pLinkView->IsVerified() ? m_hIcons[1] : m_hIcons[2]);
+		OnLinkRefresh();
 		m_nTimerID = SetTimer(1, TIMER_INTERVAL, NULL);
 	}
 
@@ -229,8 +226,10 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 
 void CMainFrame::OnLinkRefresh()
 {
+	m_pTrayIcon.SetIcon(m_hIcons[0]);
 	ASSERT_VALID(m_pLinkView);
 	VERIFY(m_pLinkView->RefreshList());
+	m_pTrayIcon.SetIcon(m_pLinkView->IsVerified() ? m_hIcons[1] : m_hIcons[2]);
 }
 
 void CMainFrame::OnLinkInsert()
