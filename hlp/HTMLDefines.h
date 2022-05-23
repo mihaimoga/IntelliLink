@@ -13,6 +13,7 @@
 #define HID_HIDE                                0x18006
 #define HID_SHOW_APPLICATION                    0x18008
 #define HID_HIDE_APPLICATION                    0x18009
+#define HID_STARTUP_APPS                        0x1800A
  
 // Prompts (IDP_*) 
 #define HIDP_OLE_INIT_FAILED                    0x30064

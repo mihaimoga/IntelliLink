@@ -77,6 +77,7 @@ protected:
 	afx_msg void OnUpdateRemove(CCmdUI* pCmdUI);
 	afx_msg void OnShowApplication();
 	afx_msg void OnHideApplication();
+	afx_msg void OnStartupApps();
 
 	DECLARE_MESSAGE_MAP()
 };

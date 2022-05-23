@@ -48,6 +48,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_MESSAGE(WM_TRAYNOTIFY, OnTrayNotification)
 	ON_WM_DESTROY()
 	ON_WM_TIMER()
+	ON_COMMAND(ID_STARTUP_APPS, &CMainFrame::OnStartupApps)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -277,4 +278,22 @@ void CMainFrame::OnHideApplication()
 	// The one and only window has been initialized, so hide and update it
 	ShowWindow(SW_HIDE);
 	UpdateWindow();
+}
+
+void CMainFrame::OnStartupApps()
+{
+	HKEY newValue;
+	TCHAR lpszApplicationBuffer[MAX_PATH + 1] = { 0, };
+	if (GetModuleFileName(NULL, lpszApplicationBuffer, MAX_PATH) > 0)
+	{
+		const DWORD nApplicationLength = _tcslen(lpszApplicationBuffer) * sizeof(TCHAR);
+		if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Run"), 0, KEY_WRITE, &newValue) == ERROR_SUCCESS)
+		{
+			if (RegSetValueEx(newValue, _T("IntelliLink"), 0, REG_SZ, (LPBYTE)lpszApplicationBuffer, nApplicationLength) == ERROR_SUCCESS)
+			{
+				MessageBox(_T("This application has been added successfully to Startup Apps!"), NULL, MB_OK | MB_ICONINFORMATION);
+			}
+			RegCloseKey(newValue);
+		}
+	}
 }
