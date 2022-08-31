@@ -282,18 +282,29 @@ void CMainFrame::OnHideApplication()
 
 void CMainFrame::OnStartupApps()
 {
-	HKEY newValue;
+	HKEY regValue;
 	TCHAR lpszApplicationBuffer[MAX_PATH + 1] = { 0, };
 	if (GetModuleFileName(NULL, lpszApplicationBuffer, MAX_PATH) > 0)
 	{
-		const DWORD nApplicationLength = _tcslen(lpszApplicationBuffer) * sizeof(TCHAR);
-		if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Run"), 0, KEY_WRITE, &newValue) == ERROR_SUCCESS)
+		// const DWORD nApplicationLength = _tcslen(lpszApplicationBuffer) * sizeof(TCHAR);
+		if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Run"), 0, KEY_ALL_ACCESS, &regValue) == ERROR_SUCCESS)
 		{
-			if (RegSetValueEx(newValue, _T("IntelliLink"), 0, REG_SZ, (LPBYTE)lpszApplicationBuffer, nApplicationLength) == ERROR_SUCCESS)
+			if (RegDeleteValue(regValue, _T("IntelliLink")) == ERROR_SUCCESS)
 			{
-				MessageBox(_T("This application has been added successfully to Startup Apps!"), NULL, MB_OK | MB_ICONINFORMATION);
+				MessageBox(_T("This application has been removed successfully from Startup Apps!"), NULL, MB_OK | MB_ICONINFORMATION);
 			}
-			RegCloseKey(newValue);
+			else
+			{
+				std::wstring quoted(_T("\""));
+				quoted += lpszApplicationBuffer;
+				quoted += _T("\"");
+				const size_t length = quoted.length() * sizeof(TCHAR);
+				if (RegSetValueEx(regValue, _T("IntelliLink"), 0, REG_SZ, (LPBYTE)quoted.c_str(), (DWORD)length) == ERROR_SUCCESS)
+				{
+					MessageBox(_T("This application has been added successfully to Startup Apps!"), NULL, MB_OK | MB_ICONINFORMATION);
+				}
+			}
+			RegCloseKey(regValue);
 		}
 	}
 }
