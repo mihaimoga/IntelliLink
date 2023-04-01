@@ -46,19 +46,19 @@ public:
 public:
 	void ResizeListCtrl();
 	void DoubleClickEntry(int nListItem);
-	BOOL RefreshList();
-	BOOL InsertLink();
-	BOOL ModifyLink();
-	BOOL DeleteLink();
-	BOOL IsSelected();
-	BOOL IsVerified();
+	bool RefreshList();
+	bool InsertLink();
+	bool ModifyLink();
+	bool DeleteLink();
+	bool IsSelected();
+	bool IsVerified();
 
-	BOOL LoadConfig();
-	BOOL SaveConfig();
+	bool LoadConfig();
+	bool SaveConfig();
 
 public:
-	BOOL m_bInitialized;
-	BOOL m_bIsVerified;
+	bool m_bInitialized;
+	bool m_bIsVerified;
 	CMainFrame* m_pMainFrame;
 	CLinkSnapshot m_pLinkSnapshot;
 

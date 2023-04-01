@@ -24,7 +24,7 @@ IMPLEMENT_DYNAMIC(CSortListCtrl, CMFCListCtrl)
 
 CSortListCtrl::CSortListCtrl()
 {
-	m_pLinkSnapshot = NULL;
+	m_pLinkSnapshot = nullptr;
 }
 
 CSortListCtrl::~CSortListCtrl()
@@ -38,7 +38,7 @@ END_MESSAGE_MAP()
 
 int CSortListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
 {
-	if (m_pLinkSnapshot != NULL)
+	if (m_pLinkSnapshot != nullptr)
 	{
 		CLinkData* pParam1 = (CLinkData*)m_pLinkSnapshot->SelectLink((DWORD)lParam1);
 		ASSERT(pParam1);

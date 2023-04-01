@@ -26,9 +26,9 @@ IMPLEMENT_DYNCREATE(CLinkView, CMFCListView)
 
 	CLinkView::CLinkView()
 {
-	m_bInitialized = FALSE;
-	m_bIsVerified = FALSE;
-	m_pMainFrame = NULL;
+	m_bInitialized = false;
+	m_bIsVerified = false;
+	m_pMainFrame = nullptr;
 
 	GetListCtrl().m_pLinkSnapshot = &m_pLinkSnapshot;
 }
@@ -67,7 +67,7 @@ void CLinkView::OnInitialUpdate()
 
 	if (!m_bInitialized)
 	{
-		m_bInitialized = TRUE;
+		m_bInitialized = true;
 
 		GetListCtrl().SetExtendedStyle(GetListCtrl().GetExtendedStyle()
 			| LVS_EX_DOUBLEBUFFER |LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
@@ -106,7 +106,7 @@ void CLinkView::OnSize(UINT nType, int cx, int cy)
 void CLinkView::OnDblClickEntry(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	if (pResult != NULL) *pResult = 0;
+	if (pResult != nullptr) *pResult = 0;
 	if (pItemActivate->iItem != -1)
 	{
 		DoubleClickEntry(pItemActivate->iItem);
@@ -123,7 +123,7 @@ void CLinkView::ResizeListCtrl()
 	HDITEM hdItem = { 0 };
 	hdItem.cxy = 0;
 	hdItem.mask = HDI_WIDTH;
-	if (GetListCtrl().GetSafeHwnd() != NULL)
+	if (GetListCtrl().GetSafeHwnd() != nullptr)
 	{
 		CRect rectClient;
 		GetListCtrl().GetClientRect(&rectClient);
@@ -149,10 +149,10 @@ void CLinkView::ResizeListCtrl()
 
 void CLinkView::DoubleClickEntry(int nListItem)
 {
-	ASSERT(GetListCtrl().m_hWnd != NULL);
+	ASSERT(GetListCtrl().m_hWnd != nullptr);
 	DWORD dwLinkID = (DWORD)GetListCtrl().GetItemData(nListItem);
 	CLinkData* pLinkData = m_pLinkSnapshot.SelectLink(dwLinkID);
-	if (pLinkData != NULL)
+	if (pLinkData != nullptr)
 	{
 		CLinkPropertiesDlg dlgLinkProperties(this);
 		dlgLinkProperties.m_strSourceURL = pLinkData->GetSourceURL();
@@ -172,11 +172,11 @@ void CLinkView::DoubleClickEntry(int nListItem)
 	}
 }
 
-BOOL CLinkView::RefreshList()
+bool CLinkView::RefreshList()
 {
 	CString strPageRank;
 	CString strListItem;
-	m_bIsVerified = TRUE;
+	m_bIsVerified = true;
 	GetListCtrl().SetRedraw(FALSE);
 	int nListItem = GetListCtrl().GetNextItem(-1, LVIS_SELECTED | LVIS_FOCUSED);
 	if (nListItem != -1)
@@ -188,7 +188,7 @@ BOOL CLinkView::RefreshList()
 	for (int nIndex = 0; nIndex < nSize; nIndex++)
 	{
 		CLinkData* pLinkData = m_pLinkSnapshot.GetAt(nIndex);
-		ASSERT(pLinkData != NULL);
+		ASSERT(pLinkData != nullptr);
 		strPageRank.Format(_T("%d"), pLinkData->GetPageRank());
 		nListItem = GetListCtrl().InsertItem(GetListCtrl().GetItemCount(), pLinkData->GetSourceURL());
 		GetListCtrl().SetItemText(nListItem, 1, pLinkData->GetTargetURL());
@@ -197,7 +197,7 @@ BOOL CLinkView::RefreshList()
 		GetListCtrl().SetItemText(nListItem, 4, pLinkData->IsValidLink() ? _T("Verified") : _T("Error"));
 		GetListCtrl().SetItemData(nListItem, pLinkData->GetLinkID());
 		if (!pLinkData->IsValidLink())
-			m_bIsVerified = FALSE;
+			m_bIsVerified = false;
 	}
 	GetListCtrl().Sort(0, TRUE, FALSE);
 	nListItem = 0;
@@ -216,10 +216,10 @@ BOOL CLinkView::RefreshList()
 	GetListCtrl().SetRedraw(TRUE);
 	GetListCtrl().UpdateWindow();
 	ResizeListCtrl();
-	return TRUE;
+	return true;
 }
 
-BOOL CLinkView::InsertLink()
+bool CLinkView::InsertLink()
 {
 	CLinkPropertiesDlg dlgLinkProperties(this);
 	if (dlgLinkProperties.DoModal() == IDOK)
@@ -232,21 +232,21 @@ BOOL CLinkView::InsertLink()
 		GetListCtrl().SetItemData(nListItem, dwLinkID);
 		GetListCtrl().Sort(0, TRUE, FALSE);
 	}
-	return TRUE;
+	return true;
 }
 
-BOOL CLinkView::ModifyLink()
+bool CLinkView::ModifyLink()
 {
 	int nListItem = GetListCtrl().GetNextItem(-1, LVIS_SELECTED | LVIS_FOCUSED);
 	if (nListItem != -1)
 	{
 		DoubleClickEntry(nListItem);
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL CLinkView::DeleteLink()
+bool CLinkView::DeleteLink()
 {
 	int nListItem = GetListCtrl().GetNextItem(-1, LVIS_SELECTED | LVIS_FOCUSED);
 	if (nListItem != -1)
@@ -256,29 +256,29 @@ BOOL CLinkView::DeleteLink()
 		{
 			GetListCtrl().DeleteItem(nListItem);
 			GetListCtrl().Sort(0, TRUE, FALSE);
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL CLinkView::IsSelected()
+bool CLinkView::IsSelected()
 {
 	int nListItem = GetListCtrl().GetNextItem(-1, LVIS_SELECTED | LVIS_FOCUSED);
 	return (nListItem != -1);
 }
 
-BOOL CLinkView::IsVerified()
+bool CLinkView::IsVerified()
 {
 	return m_bIsVerified;
 }
 
-BOOL CLinkView::LoadConfig()
+bool CLinkView::LoadConfig()
 {
 	return m_pLinkSnapshot.LoadConfig();
 }
 
-BOOL CLinkView::SaveConfig()
+bool CLinkView::SaveConfig()
 {
 	return m_pLinkSnapshot.SaveConfig();
 }

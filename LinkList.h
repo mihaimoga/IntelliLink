@@ -24,7 +24,7 @@ protected:
 	
 public:
 	CLinkData();
-	CLinkData(DWORD dwLinkID, CString strSourceURL, CString strTargetURL, CString strURLName, int nPageRank, BOOL bStatus);
+	CLinkData(DWORD dwLinkID, CString strSourceURL, CString strTargetURL, CString strURLName, int nPageRank, bool bStatus);
 	virtual ~CLinkData();
 
 public:
@@ -38,10 +38,10 @@ public:
 	void SetURLName(CString strURLName) { m_strURLName = strURLName; }
 	int GetPageRank() { return m_nPageRank; }
 	void SetPageRank(int nPageRank) { m_nPageRank = nPageRank; }
-	BOOL GetStatus() { return m_bStatus; }
-	void SetStatus(BOOL bStatus) { m_bStatus = bStatus; }
+	bool GetStatus() { return m_bStatus; }
+	void SetStatus(bool bStatus) { m_bStatus = bStatus; }
 
-	BOOL IsValidLink();
+	bool IsValidLink();
 
 protected:
 	DWORD m_dwLinkID;
@@ -49,7 +49,7 @@ protected:
 	CString m_strTargetURL;
 	CString m_strURLName;
 	int m_nPageRank;
-	BOOL m_bStatus;
+	bool m_bStatus;
 };
 
 typedef CArray<CLinkData*> CLinkList;
@@ -68,17 +68,17 @@ public:
 	virtual ~CLinkSnapshot();
 
 public:
-	BOOL RemoveAll();
+	bool RemoveAll();
 	int GetSize() { return (int)m_arrLinkList.GetSize(); }
 	CLinkData* GetAt(int nIndex) { return m_arrLinkList.GetAt(nIndex); }
 
-	BOOL Refresh();
+	bool Refresh();
 	CLinkData* SelectLink(DWORD dwLinkID);
-	DWORD InsertLink(CString strSourceURL, CString strTargetURL, CString strURLName, int nPageRank, BOOL bStatus);
-	BOOL DeleteLink(DWORD dwLinkID);
+	DWORD InsertLink(CString strSourceURL, CString strTargetURL, CString strURLName, int nPageRank, bool bStatus);
+	bool DeleteLink(DWORD dwLinkID);
 
-	BOOL LoadConfig();
-	BOOL SaveConfig();
+	bool LoadConfig();
+	bool SaveConfig();
 
 protected:
 	CLinkList m_arrLinkList;

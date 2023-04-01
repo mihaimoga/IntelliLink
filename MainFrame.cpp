@@ -55,8 +55,8 @@ END_MESSAGE_MAP()
 
 CMainFrame::CMainFrame()
 {
-	m_MainButton = NULL;
-	m_pLinkView = NULL;
+	m_MainButton = nullptr;
+	m_pLinkView = nullptr;
 	m_hIcons[0] = CTrayNotifyIcon::LoadIcon(IDR_MAINFRAME);
 	m_hIcons[1] = CTrayNotifyIcon::LoadIcon(IDR_HAPPY);
 	m_hIcons[2] = CTrayNotifyIcon::LoadIcon(IDR_SAD);
@@ -80,7 +80,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Silver);
 
 	/* create a view to occupy the client area of the frame
-	if (!m_wndView.Create(NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect(0, 0, 0, 0), this, AFX_IDW_PANE_FIRST, NULL))
+	if (!m_wndView.Create(nullptr, nullptr, AFX_WS_DEFAULT_VIEW, CRect(0, 0, 0, 0), this, AFX_IDW_PANE_FIRST, nullptr))
 	{
 		TRACE0("Failed to create view window\n");
 		return -1;
@@ -103,7 +103,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	bNameValid = strTitlePane.LoadString(IDS_STATUS_PANE1);
 	ASSERT(bNameValid);
 	m_wndStatusBar.AddElement(new CMFCRibbonStatusBarPane(
-		ID_STATUSBAR_PANE1, strTitlePane, TRUE, NULL,
+		ID_STATUSBAR_PANE1, strTitlePane, TRUE, nullptr,
 		_T("012345678901234567890123456789012345678901234567890123456789")), strTitlePane);
 
 	// enable Visual Studio 2005 style docking window behavior
@@ -117,7 +117,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		AfxMessageBox(_T("Failed to create tray icon"), MB_OK | MB_ICONSTOP);
 		return -1;
 	}
-	m_nTimerID = SetTimer(1, TIMER_INTERVAL, NULL);
+	m_nTimerID = SetTimer(1, TIMER_INTERVAL, nullptr);
 
 	return 0;
 }
@@ -125,13 +125,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 {
 	CCreateContext pLinkContext;
-	pLinkContext.m_pCurrentDoc = NULL;
+	pLinkContext.m_pCurrentDoc = nullptr;
 	pLinkContext.m_pCurrentFrame = this;
-	pLinkContext.m_pLastView = NULL;
-	pLinkContext.m_pNewDocTemplate = NULL;
+	pLinkContext.m_pLastView = nullptr;
+	pLinkContext.m_pNewDocTemplate = nullptr;
 	pLinkContext.m_pNewViewClass = RUNTIME_CLASS(CLinkView);
 
-	if ((m_pLinkView = (CLinkView*) CreateView(&pLinkContext, AFX_IDW_PANE_FIRST)) != NULL)
+	if ((m_pLinkView = (CLinkView*) CreateView(&pLinkContext, AFX_IDW_PANE_FIRST)) != nullptr)
 	{
 		m_pLinkView->ShowWindow(SW_SHOW);
 		m_pLinkView->OnInitialUpdate();
@@ -163,7 +163,7 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 
 BOOL CMainFrame::SetStatusBarText(CString strMessage)
 {
-	if (m_wndStatusBar.GetSafeHwnd() != NULL)
+	if (m_wndStatusBar.GetSafeHwnd() != nullptr)
 	{
 		m_wndStatusBar.GetElement(0)->SetText(strMessage);
 		m_wndStatusBar.Invalidate();
@@ -219,7 +219,7 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 	{
 		VERIFY(KillTimer(m_nTimerID));
 		OnLinkRefresh();
-		m_nTimerID = SetTimer(1, TIMER_INTERVAL, NULL);
+		m_nTimerID = SetTimer(1, TIMER_INTERVAL, nullptr);
 	}
 
 	CFrameWndEx::OnTimer(nIDEvent);
@@ -284,14 +284,14 @@ void CMainFrame::OnStartupApps()
 {
 	HKEY regValue;
 	TCHAR lpszApplicationBuffer[MAX_PATH + 1] = { 0, };
-	if (GetModuleFileName(NULL, lpszApplicationBuffer, MAX_PATH) > 0)
+	if (GetModuleFileName(nullptr, lpszApplicationBuffer, MAX_PATH) > 0)
 	{
 		// const DWORD nApplicationLength = _tcslen(lpszApplicationBuffer) * sizeof(TCHAR);
 		if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Run"), 0, KEY_ALL_ACCESS, &regValue) == ERROR_SUCCESS)
 		{
 			if (RegDeleteValue(regValue, _T("IntelliLink")) == ERROR_SUCCESS)
 			{
-				MessageBox(_T("This application has been removed successfully from Startup Apps!"), NULL, MB_OK | MB_ICONINFORMATION);
+				MessageBox(_T("This application has been removed successfully from Startup Apps!"), nullptr, MB_OK | MB_ICONINFORMATION);
 			}
 			else
 			{
@@ -301,7 +301,7 @@ void CMainFrame::OnStartupApps()
 				const size_t length = quoted.length() * sizeof(TCHAR);
 				if (RegSetValueEx(regValue, _T("IntelliLink"), 0, REG_SZ, (LPBYTE)quoted.c_str(), (DWORD)length) == ERROR_SUCCESS)
 				{
-					MessageBox(_T("This application has been added successfully to Startup Apps!"), NULL, MB_OK | MB_ICONINFORMATION);
+					MessageBox(_T("This application has been added successfully to Startup Apps!"), nullptr, MB_OK | MB_ICONINFORMATION);
 				}
 			}
 			RegCloseKey(regValue);

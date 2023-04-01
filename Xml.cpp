@@ -314,7 +314,7 @@ namespace JWXml
 			for( iter = m_mpNamespace.begin(); iter != m_mpNamespace.end(); iter++)
 			{
 				CString strNamespace;
-				strNamespace.Format( _T("xmlns:%s='%s' "), iter->first, iter->second);
+				strNamespace.Format( _T("xmlns:%s='%s' "), static_cast<LPCWSTR>(iter->first), static_cast<LPCWSTR>(iter->second));
 
 				strNamespaces += strNamespace;
 			}

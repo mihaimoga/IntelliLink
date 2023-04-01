@@ -157,7 +157,7 @@ namespace JWXml
 			ASSERT( SUCCEEDED(hr) );
 			
 			CString strFullName;
-			strFullName.Format( strPrefix.IsEmpty() ? _T("%s%s") : _T("%s:%s"), strPrefix, strName);
+			strFullName.Format( strPrefix.IsEmpty() ? _T("%s%s") : _T("%s:%s"), static_cast<LPCWSTR>(strPrefix), static_cast<LPCWSTR>(strName));
 			
 			MSXML2::IXMLDOMAttributePtr pAttribute = NULL;
 			pAttribute = pDoc->createNode( _variant_t(_T("attribute")), _bstr_t(strFullName), _bstr_t(strNamespaceURI) );
@@ -310,7 +310,7 @@ namespace JWXml
 			MSXML2::IXMLDOMNodePtr pChildNode = NULL;
 			CString strXPath;
 			strName.Replace( _T("'"), _T("''"));
-			strXPath.Format( _T("*[local-name(.) = '%s']"), strName);
+			strXPath.Format( _T("*[local-name(.) = '%s']"), static_cast<LPCWSTR>(strName));
 			pChildNode = m_pNode->selectSingleNode(_bstr_t((LPCTSTR)strXPath));
 
 			// create if not exist

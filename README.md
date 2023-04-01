@@ -1,3 +1,5 @@
+![IntelliLink.png](IntelliLink.png)
+
 [IntelliLink](https://www.emvs.site/intellilink/) is an alternative Windows version to Online Link Managers!
 
 This application is developed in Microsoft Visual C++, and it is licensed under GNU General Public License v3.0.
