@@ -12,7 +12,7 @@ History: PJN / 25-11-1997 Addition of the following
                           2. Code is now UNICODE enabled + build configurations are provided
                           3. The documentation for the class has been updated
          PJN / 27-01-1999 1. Code first tries to load a 16*16 icon before loading the 32*32
-                          version. This removes the blurryness which was previously occuring
+                          version. This removes the blurryness which was previously occurring
          PJN / 28-01-1999 1. Fixed a number of level 4 warnings which were occurring.
          PJN / 09-05-1999 1. Fixed a problem as documented in KB article "PRB: Menus for 
                           Notification Icons Do Not Work Correctly", Article ID: Q135788 
@@ -37,7 +37,7 @@ History: PJN / 25-11-1997 Addition of the following
          PJN / 28-08-2001 1. Added support for direct access to the System Tray's HDC. This allows
                           you to generate an icon for the tray on the fly using GDI calls. The idea
                           came from the article by Jeff Heaton in the April issue of WDJ. Also added
-                          are overriden Create methods to allow you to easily costruct a dynamic
+                          are overriden Create methods to allow you to easily construct a dynamic
                           tray icon given a BITMAP instead of an ICON.
          PJN / 21-03-2003 1. Fixed icon resource leaks in SetIcon(LPCTSTR lpIconName) and 
                           SetIcon(UINT nIDResource). Thanks to Egor Pervouninski for reporting this.
@@ -184,7 +184,7 @@ History: PJN / 25-11-1997 Addition of the following
                           for a tray icon. Thanks to Geert van Horrik for this nice addition
                           3. All places which copy text to the underlying NOTIFYICONDATA now use the _TRUNCATE parameter in 
                           their call to the Safe CRT runtime. This change in behaviour means that client apps will no longer
-                          crash if they supply data larger than this Windows structure can accommadate. Thanks to Geert van 
+                          crash if they supply data larger than this Windows structure can accommodate. Thanks to Geert van 
                           Horrik for prompting this update.
                           4. All calls to sizeof(struct)/sizeof(first element) have been replaced with _countof
                           5. Fixed a linker error when compiling the WTL sample app in release mode.
@@ -207,7 +207,7 @@ History: PJN / 25-11-1997 Addition of the following
                           5. Replaced BOOL throughout the codebase with bool.
                           6. Removed GetTooltipMaxSize as it did not provide very useful functionality.
                           7. Removed all functionality for Pre Vista versions of Windows.
-         PJN / 07-10-2018 1. Updated coptright details.
+         PJN / 07-10-2018 1. Updated copyright details.
                           2. Fixed a number of C++ core guidelines compiler warnings. These changes mean that
                           the code will now only compile on VC 2017 or later.
          PJN / 22-04-2019 1. Updated copyright details
@@ -220,8 +220,12 @@ History: PJN / 25-11-1997 Addition of the following
          PJN / 12-05-2020 1. Fixed more Clang-Tidy static code analysis warnings in the code.
          PJN / 18-12-2021 1. Updated copyright details.
                           2. Fixed more Clang-Tidy static code analysis warnings in the code.
+         PJN / 21-05-2022 1. Updated copyright details.
+                          2. Updated the code to use C++ uniform initialization for all variable declarations
+         PJN / 18-06-2023 1. Updated copyright details.
+                          2. Added additional SAL annotations to the code.
 
-Copyright (c) 1997 - 2021 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1997 - 2023 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -236,7 +240,7 @@ to maintain a single distribution point for the source code.
 */
 
 
-///////////////////////////////// Includes ////////////////////////////////////
+//////////////////// Includes /////////////////////////////////////////////////
 
 #include "stdafx.h"
 #include "NTray.h"
@@ -246,7 +250,7 @@ to maintain a single distribution point for the source code.
 #endif //#ifndef _INC_SHELLAPI
 
 
-///////////////////////////////// Macros //////////////////////////////////////
+//////////////////// Macros / Defines /////////////////////////////////////////
 
 #ifdef _AFX
 #ifdef _DEBUG
@@ -259,21 +263,21 @@ to maintain a single distribution point for the source code.
 #endif //#ifndef NIIF_RESPECT_QUIET_TIME
 
 
-///////////////////////////////// Implementation //////////////////////////////
+//////////////////// Implementation ///////////////////////////////////////////
 
 #pragma warning(suppress: 26426)
 const UINT wm_TaskbarCreated = RegisterWindowMessage(_T("TaskbarCreated"));
 
 CTrayNotifyIcon::CTrayNotifyIcon() noexcept : m_NotifyIconData{},
-m_bCreated(false),
-m_bHidden(false),
-m_pNotificationWnd(nullptr),
-m_nDefaultMenuItem(0),
-m_bDefaultMenuItemByPos(true),
-m_hDynamicIcon(nullptr),
-m_nNumIcons(0),
-m_nTimerID(0),
-m_nCurrentIconIndex(0)
+m_bCreated{ false },
+m_bHidden{ false },
+m_pNotificationWnd{ nullptr },
+m_nDefaultMenuItem{ 0 },
+m_bDefaultMenuItemByPos{ true },
+m_hDynamicIcon{ nullptr },
+m_nNumIcons{ 0 },
+m_nTimerID{ 0 },
+m_nCurrentIconIndex{ 0 }
 {
 	m_NotifyIconData.cbSize = sizeof(NOTIFYICONDATA);
 }
@@ -291,10 +295,10 @@ CTrayNotifyIcon::~CTrayNotifyIcon()
 	}
 }
 
-bool CTrayNotifyIcon::Delete(_In_ bool bCloseHelperWindow) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::Delete(_In_ bool bCloseHelperWindow) noexcept
 {
 	//What will be the return value from this function (assume the best)
-	bool bSuccess = true;
+	bool bSuccess{ true };
 
 	if (m_bCreated)
 	{
@@ -311,7 +315,7 @@ bool CTrayNotifyIcon::Delete(_In_ bool bCloseHelperWindow) noexcept
 }
 
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::Create(_In_ bool bShow) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ bool bShow) noexcept
 {
 	m_NotifyIconData.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
 
@@ -322,18 +326,18 @@ bool CTrayNotifyIcon::Create(_In_ bool bShow) noexcept
 		m_NotifyIconData.dwStateMask = NIS_HIDDEN;
 	}
 
-	const bool bSuccess = Shell_NotifyIcon(NIM_ADD, &m_NotifyIconData);
+	const BOOL bSuccess{ Shell_NotifyIcon(NIM_ADD, &m_NotifyIconData) };
 	if (bSuccess)
 	{
 		m_bCreated = true;
-
 		if (!bShow)
 			m_bHidden = true;
 	}
+
 	return bSuccess;
 }
 
-bool CTrayNotifyIcon::Hide() noexcept
+_Success_(return != false) bool CTrayNotifyIcon::Hide() noexcept
 {
 	//Validate our parameters
 #pragma warning(suppress: 26477)
@@ -342,13 +346,13 @@ bool CTrayNotifyIcon::Hide() noexcept
 	m_NotifyIconData.uFlags = NIF_STATE;
 	m_NotifyIconData.dwState = NIS_HIDDEN;
 	m_NotifyIconData.dwStateMask = NIS_HIDDEN;
-	const bool bSuccess = Shell_NotifyIcon(NIM_MODIFY, &m_NotifyIconData);
+	const BOOL bSuccess{ Shell_NotifyIcon(NIM_MODIFY, &m_NotifyIconData) };
 	if (bSuccess)
 		m_bHidden = true;
 	return bSuccess;
 }
 
-bool CTrayNotifyIcon::Show() noexcept
+_Success_(return != false) bool CTrayNotifyIcon::Show() noexcept
 {
 	//Validate our parameters
 #pragma warning(suppress: 26477)
@@ -359,7 +363,7 @@ bool CTrayNotifyIcon::Show() noexcept
 	m_NotifyIconData.uFlags = NIF_STATE;
 	m_NotifyIconData.dwState = 0;
 	m_NotifyIconData.dwStateMask = NIS_HIDDEN;
-	const bool bSuccess = Shell_NotifyIcon(NIM_MODIFY, &m_NotifyIconData);
+	const BOOL bSuccess{ Shell_NotifyIcon(NIM_MODIFY, &m_NotifyIconData) };
 	if (bSuccess)
 		m_bHidden = false;
 	return bSuccess;
@@ -376,14 +380,14 @@ void CTrayNotifyIcon::SetMenu(_In_ HMENU hMenu)
 	m_Menu.Attach(hMenu);
 
 #ifdef _AFX
-	CMenu* pSubMenu = m_Menu.GetSubMenu(0);
+	CMenu* pSubMenu{ m_Menu.GetSubMenu(0) };
 #pragma warning(suppress: 26477)
 	ATLASSUME(pSubMenu != nullptr); //Your menu resource has been designed incorrectly
 
 	//Make the specified menu item the default (bold font)
 	pSubMenu->SetDefaultItem(m_nDefaultMenuItem, m_bDefaultMenuItemByPos);
 #else
-	CMenuHandle subMenu = m_Menu.GetSubMenu(0);
+	CMenuHandle subMenu{ m_Menu.GetSubMenu(0) };
 #pragma warning(suppress: 26477)
 	ATLASSERT(subMenu.IsMenu()); //Your menu resource has been designed incorrectly
 
@@ -407,13 +411,13 @@ void CTrayNotifyIcon::SetDefaultMenuItem(_In_ UINT uItem, _In_ bool fByPos)
 	if (m_Menu.operator HMENU())
 	{
 #ifdef _AFX
-		CMenu* pSubMenu = m_Menu.GetSubMenu(0);
+		CMenu* pSubMenu{ m_Menu.GetSubMenu(0) };
 #pragma warning(suppress: 26477)
 		ATLASSUME(pSubMenu != nullptr); //Your menu resource has been designed incorrectly
 
 		pSubMenu->SetDefaultItem(m_nDefaultMenuItem, m_bDefaultMenuItemByPos);
 #else
-		CMenuHandle subMenu = m_Menu.GetSubMenu(0);
+		CMenuHandle subMenu{ m_Menu.GetSubMenu(0) };
 #pragma warning(suppress: 26477)
 		ATLASSERT(subMenu.IsMenu()); //Your menu resource has been designed incorrectly
 
@@ -424,10 +428,10 @@ void CTrayNotifyIcon::SetDefaultMenuItem(_In_ UINT uItem, _In_ bool fByPos)
 
 #ifdef _AFX
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Validate our parameters
@@ -446,7 +450,7 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 		return false;
 	}
 #ifdef _AFX
-	CMenu* pSubMenu = m_Menu.GetSubMenu(0);
+	CMenu* pSubMenu{ m_Menu.GetSubMenu(0) };
 	if (pSubMenu == nullptr)
 	{
 #pragma warning(suppress: 26477)
@@ -456,7 +460,7 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 	//Make the specified menu item the default (bold font)
 	pSubMenu->SetDefaultItem(m_nDefaultMenuItem, m_bDefaultMenuItemByPos);
 #else
-	CMenuHandle subMenu = m_Menu.GetSubMenu(0);
+	CMenuHandle subMenu{ m_Menu.GetSubMenu(0) };
 	if (!subMenu.IsMenu())
 	{
 #pragma warning(suppress: 26477)
@@ -500,7 +504,7 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 	return m_bCreated;
 }
 
-bool CTrayNotifyIcon::SetVersion(_In_ UINT uVersion) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetVersion(_In_ UINT uVersion) noexcept
 {
 	//Call the Shell_NotifyIcon function
 	m_NotifyIconData.uVersion = uVersion;
@@ -514,11 +518,11 @@ HICON CTrayNotifyIcon::BitmapToIcon(_In_ const CBitmap* pBitmap)
 	ATLASSUME(pBitmap != nullptr);
 
 	//Get the width and height of a small icon
-	const int w = GetSystemMetrics(SM_CXSMICON);
-	const int h = GetSystemMetrics(SM_CYSMICON);
+	const int nWidth{ GetSystemMetrics(SM_CXSMICON) };
+	const int nHeight{ GetSystemMetrics(SM_CYSMICON) };
 
 	//Create a 0 mask
-	const int nMaskSize = h * (w / 8);
+	const int nMaskSize = nHeight * (nWidth / 8);
 	ATL::CHeapPtr<BYTE> pMask;
 	if (!pMask.Allocate(nMaskSize))
 #pragma warning(suppress: 26487)
@@ -530,11 +534,11 @@ HICON CTrayNotifyIcon::BitmapToIcon(_In_ const CBitmap* pBitmap)
 	CBitmap maskBitmap;
 #ifdef _AFX
 #pragma warning(suppress: 26486)
-	const BOOL bSuccess = maskBitmap.CreateBitmap(w, h, 1, 1, pMask.m_pData);
+	const BOOL bSuccess{ maskBitmap.CreateBitmap(nWidth, nHeight, 1, 1, pMask.m_pData) };
 #else
 #pragma warning(suppress: 26486)
-	maskBitmap.CreateBitmap(w, h, 1, 1, pMask.m_pData);
-	const bool bSuccess = !maskBitmap.IsNull();
+	maskBitmap.CreateBitmap(nWidth, nHeight, 1, 1, pMask.m_pData);
+	const bool bSuccess{ !maskBitmap.IsNull() };
 #endif //#ifdef _AFX
 
 	//Handle the error
@@ -556,10 +560,10 @@ HICON CTrayNotifyIcon::BitmapToIcon(_In_ const CBitmap* pBitmap)
 
 #ifdef _AFX
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Convert the bitmap to an Icon
@@ -573,10 +577,10 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 
 #ifdef _AFX
 #pragma warning(suppress: 26434 26487)
-bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434 26487)
-bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Validate our parameters
@@ -589,7 +593,7 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 
 	//let the normal Create function do its stuff
 #pragma warning(suppress: 26481 26486)
-	bool bSuccess = Create(pNotifyWnd, uID, pszTooltipText, phIcons[0], nNotifyMessage, uMenuID, bShow);
+	bool bSuccess{ Create(pNotifyWnd, uID, pszTooltipText, phIcons[0], nNotifyMessage, uMenuID, bShow) };
 	if (bSuccess)
 	{
 		//Start the animation
@@ -601,10 +605,10 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 
 #ifdef _AFX
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Validate our parameters
@@ -619,7 +623,7 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 		return false;
 	}
 #ifdef _AFX
-	CMenu* pSubMenu = m_Menu.GetSubMenu(0);
+	CMenu* pSubMenu{ m_Menu.GetSubMenu(0) };
 	if (pSubMenu == nullptr)
 	{
 #pragma warning(suppress: 26477)
@@ -629,7 +633,7 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 	//Make the specified menu item the default (bold font)
 	pSubMenu->SetDefaultItem(m_nDefaultMenuItem, m_bDefaultMenuItemByPos);
 #else
-	CMenuHandle subMenu = m_Menu.GetSubMenu(0);
+	CMenuHandle subMenu{ m_Menu.GetSubMenu(0) };
 	if (!subMenu.IsMenu())
 	{
 #pragma warning(suppress: 26477)
@@ -731,10 +735,10 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 
 #ifdef _AFX
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Convert the bitmap to an ICON
@@ -748,10 +752,10 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 
 #ifdef _AFX
 #pragma warning(suppress: 26434 26487)
-bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434 26487)
-bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Validate our parameters
@@ -764,7 +768,7 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 
 	//let the normal Create function do its stuff
 #pragma warning(suppress: 26481 26486)
-	bool bSuccess = Create(pNotifyWnd, uID, pszTooltipText, pszBalloonText, pszBalloonCaption, nTimeout, style, phIcons[0], nNotifyMessage, uMenuID, bNoSound, bLargeIcon, bRealtime, hBalloonIcon, bQuietTime, bShow);
+	bool bSuccess{ Create(pNotifyWnd, uID, pszTooltipText, pszBalloonText, pszBalloonCaption, nTimeout, style, phIcons[0], nNotifyMessage, uMenuID, bNoSound, bLargeIcon, bRealtime, hBalloonIcon, bQuietTime, bShow) };
 	if (bSuccess)
 	{
 		//Start the animation
@@ -774,7 +778,7 @@ bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPC
 	return bSuccess;
 }
 
-bool CTrayNotifyIcon::SetBalloonDetails(_In_z_ LPCTSTR pszBalloonText, _In_z_ LPCTSTR pszBalloonCaption, _In_ BalloonStyle style, _In_ UINT nTimeout, _In_ HICON hUserIcon, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_ HICON hBalloonIcon) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetBalloonDetails(_In_z_ LPCTSTR pszBalloonText, _In_z_ LPCTSTR pszBalloonCaption, _In_ BalloonStyle style, _In_ UINT nTimeout, _In_ HICON hUserIcon, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_ HICON hBalloonIcon) noexcept
 {
 	if (!m_bCreated)
 		return false;
@@ -859,13 +863,13 @@ CTrayNotifyIcon::String CTrayNotifyIcon::GetBalloonCaption() const
 
 UINT CTrayNotifyIcon::GetBalloonTimeout() const noexcept
 {
-	UINT nTimeout = 0;
+	UINT nTimeout{ 0 };
 	if (m_bCreated)
 		nTimeout = m_NotifyIconData.uTimeout;
 	return nTimeout;
 }
 
-bool CTrayNotifyIcon::SetTooltipText(_In_z_ LPCTSTR pszTooltipText) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetTooltipText(_In_z_ LPCTSTR pszTooltipText) noexcept
 {
 	if (!m_bCreated)
 		return false;
@@ -877,7 +881,7 @@ bool CTrayNotifyIcon::SetTooltipText(_In_z_ LPCTSTR pszTooltipText) noexcept
 	return Shell_NotifyIcon(NIM_MODIFY, &m_NotifyIconData);
 }
 
-bool CTrayNotifyIcon::SetTooltipText(_In_ UINT nID)
+_Success_(return != false) bool CTrayNotifyIcon::SetTooltipText(_In_ UINT nID)
 {
 	String sToolTipText;
 	if (!sToolTipText.LoadString(nID))
@@ -888,7 +892,7 @@ bool CTrayNotifyIcon::SetTooltipText(_In_ UINT nID)
 }
 
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::SetIcon(_In_ const CBitmap* pBitmap)
+_Success_(return != false) bool CTrayNotifyIcon::SetIcon(_In_ const CBitmap* pBitmap)
 {
 	//Convert the bitmap to an ICON
 	if (m_hDynamicIcon != nullptr)
@@ -900,7 +904,7 @@ bool CTrayNotifyIcon::SetIcon(_In_ const CBitmap* pBitmap)
 }
 
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::SetIcon(_In_ HICON hIcon) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetIcon(_In_ HICON hIcon) noexcept
 {
 	//Validate our parameters
 #pragma warning(suppress: 26477)
@@ -919,29 +923,29 @@ bool CTrayNotifyIcon::SetIcon(_In_ HICON hIcon) noexcept
 }
 
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::SetIcon(_In_ LPCTSTR lpIconName)
+_Success_(return != false) bool CTrayNotifyIcon::SetIcon(_In_ LPCTSTR lpIconName)
 {
 	return SetIcon(LoadIcon(lpIconName));
 }
 
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::SetIcon(_In_ UINT nIDResource)
+_Success_(return != false) bool CTrayNotifyIcon::SetIcon(_In_ UINT nIDResource)
 {
 	return SetIcon(LoadIcon(nIDResource));
 }
 
-bool CTrayNotifyIcon::SetStandardIcon(_In_ LPCTSTR lpIconName) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetStandardIcon(_In_ LPCTSTR lpIconName) noexcept
 {
 	return SetIcon(::LoadIcon(nullptr, lpIconName));
 }
 
-bool CTrayNotifyIcon::SetStandardIcon(_In_ UINT nIDResource) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetStandardIcon(_In_ UINT nIDResource) noexcept
 {
 	return SetIcon(::LoadIcon(nullptr, MAKEINTRESOURCE(nIDResource)));
 }
 
 #pragma warning(suppress: 26434 26487)
-bool CTrayNotifyIcon::SetIcon(_In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetIcon(_In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept
 {
 	//Validate our parameters
 #pragma warning(suppress: 26477)
@@ -984,9 +988,9 @@ HICON CTrayNotifyIcon::LoadIcon(_In_ UINT nIDResource, _In_ bool bLargeIcon)
 }
 
 #ifdef _AFX
-bool CTrayNotifyIcon::SetNotificationWnd(_In_ CWnd* pNotifyWnd) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetNotificationWnd(_In_ CWnd* pNotifyWnd) noexcept
 #else
-bool CTrayNotifyIcon::SetNotificationWnd(_In_ CWindow* pNotifyWnd) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetNotificationWnd(_In_ CWindow* pNotifyWnd) noexcept
 #endif //#ifdef _AFX
 {
 	//Validate our parameters
@@ -1015,7 +1019,7 @@ CTrayNotifyIcon::String CTrayNotifyIcon::GetTooltipText() const
 #pragma warning(suppress: 26434)
 HICON CTrayNotifyIcon::GetIcon() const noexcept
 {
-	HICON hIcon = nullptr;
+	HICON hIcon{ nullptr };
 	if (m_bCreated)
 	{
 		if (UsingAnimatedIcon())
@@ -1036,7 +1040,7 @@ ATL::CWindow* CTrayNotifyIcon::GetNotificationWnd() const noexcept
 }
 
 #pragma warning(suppress: 26434)
-bool CTrayNotifyIcon::SetFocus() noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetFocus() noexcept
 {
 	//Call the Shell_NotifyIcon function
 	return Shell_NotifyIcon(NIM_SETFOCUS, &m_NotifyIconData);
@@ -1044,9 +1048,9 @@ bool CTrayNotifyIcon::SetFocus() noexcept
 
 LRESULT CTrayNotifyIcon::OnTrayNotification(WPARAM wParam, LPARAM lParam)
 {
-	bool bShowMenu = false;
-	bool bDoubleClick = false;
-	UINT nIconID = 0;
+	bool bShowMenu{ false };
+	bool bDoubleClick{ false };
+	UINT nIconID{ 0 };
 	if ((m_NotifyIconData.uVersion == 0) || (m_NotifyIconData.uVersion == NOTIFYICON_VERSION))
 	{
 #pragma warning(suppress: 26472)
@@ -1069,11 +1073,11 @@ LRESULT CTrayNotifyIcon::OnTrayNotification(WPARAM wParam, LPARAM lParam)
 	if (bShowMenu || bDoubleClick)
 	{
 #ifdef _AFX
-		CMenu* pSubMenu = m_Menu.GetSubMenu(0);
+		CMenu* pSubMenu{ m_Menu.GetSubMenu(0) };
 #pragma warning(suppress: 26477)
 		ATLASSUME(pSubMenu != nullptr); //Your menu resource has been designed incorrectly
 #else
-		CMenuHandle subMenu = m_Menu.GetSubMenu(0);
+		CMenuHandle subMenu{ m_Menu.GetSubMenu(0) };
 #pragma warning(suppress: 26477)
 		ATLASSERT(subMenu.IsMenu());
 #endif //#ifdef _AFX
@@ -1091,13 +1095,13 @@ LRESULT CTrayNotifyIcon::OnTrayNotification(WPARAM wParam, LPARAM lParam)
 #endif //#ifdef _AFX
 			::PostMessage(m_NotifyIconData.hWnd, WM_NULL, 0, 0);
 		}
-		else if (bDoubleClick) //double click received, the default action is to execute first menu item 
+		else if (bDoubleClick) //double click received, the default action is to execute first menu item
 		{
 			::SetForegroundWindow(m_NotifyIconData.hWnd);
 #ifdef _AFX
-			const UINT nDefaultItem = pSubMenu->GetDefaultItem(GMDI_GOINTOPOPUPS, FALSE);
+			const UINT nDefaultItem{ pSubMenu->GetDefaultItem(GMDI_GOINTOPOPUPS, FALSE) };
 #else
-			const UINT nDefaultItem = subMenu.GetMenuDefaultItem(FALSE, GMDI_GOINTOPOPUPS);
+			const UINT nDefaultItem{ subMenu.GetMenuDefaultItem(FALSE, GMDI_GOINTOPOPUPS) };
 #endif //#ifdef _AFX
 #pragma warning(suppress: 26472)
 			if (nDefaultItem != static_cast<UINT>(-1))
@@ -1108,7 +1112,7 @@ LRESULT CTrayNotifyIcon::OnTrayNotification(WPARAM wParam, LPARAM lParam)
 	return 1; // handled
 }
 
-bool CTrayNotifyIcon::GetDynamicDCAndBitmap(_In_ CDC* pDC, _In_ CBitmap* pBitmap)
+_Success_(return != false) bool CTrayNotifyIcon::GetDynamicDCAndBitmap(_In_ CDC* pDC, _In_ CBitmap* pBitmap)
 {
 	//Validate our parameters
 #pragma warning(suppress: 26477)
@@ -1118,38 +1122,38 @@ bool CTrayNotifyIcon::GetDynamicDCAndBitmap(_In_ CDC* pDC, _In_ CBitmap* pBitmap
 
 	//Get the HWND for the desktop
 #ifdef _AFX
-	CWnd* pWndScreen = CWnd::GetDesktopWindow();
+	CWnd* pWndScreen{ CWnd::GetDesktopWindow() };
 	if (pWndScreen == nullptr)
 		return false;
 #else
-	CWindow WndScreen(::GetDesktopWindow());
+	CWindow WndScreen{ ::GetDesktopWindow() };
 	if (!WndScreen.IsWindow())
 		return false;
 #endif //#ifdef _AFX
 
 	//Get the desktop HDC to create a compatible bitmap from
 #ifdef _AFX
-	CDC* pDCScreen = pWndScreen->GetDC();
+	CDC* pDCScreen{ pWndScreen->GetDC() };
 	if (pDCScreen == nullptr)
 		return false;
 #else
-	CDC DCScreen(WndScreen.GetDC());
+	CDC DCScreen{ WndScreen.GetDC() };
 	if (DCScreen.IsNull())
 		return false;
 #endif //#ifdef _AFX
 
 	//Get the width and height of a small icon
-	const int w = GetSystemMetrics(SM_CXSMICON);
-	const int h = GetSystemMetrics(SM_CYSMICON);
+	const int nWidth{ GetSystemMetrics(SM_CXSMICON) };
+	const int nHeight{ GetSystemMetrics(SM_CYSMICON) };
 
 	//Create an off-screen bitmap that the dynamic tray icon 
 	//can be drawn into (Compatible with the desktop DC)
 #ifdef _AFX
 #pragma warning(suppress: 26486)
-	BOOL bSuccess = pBitmap->CreateCompatibleBitmap(pDCScreen, w, h);
+	BOOL bSuccess{ pBitmap->CreateCompatibleBitmap(pDCScreen, nWidth, nHeight) };
 #else
 #pragma warning(suppress: 26486)
-	BOOL bSuccess = (pBitmap->CreateCompatibleBitmap(DCScreen.operator HDC(), w, h) != nullptr);
+	BOOL bSuccess = (pBitmap->CreateCompatibleBitmap(DCScreen.operator HDC(), nWidth, nHeight) != nullptr);
 #endif //#ifdef _AFX
 	if (!bSuccess)
 	{
@@ -1201,7 +1205,7 @@ bool CTrayNotifyIcon::GetDynamicDCAndBitmap(_In_ CDC* pDC, _In_ CBitmap* pBitmap
 }
 
 #pragma warning(suppress: 26487)
-bool CTrayNotifyIcon::StartAnimation(_In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::StartAnimation(_In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept
 {
 	//Validate our parameters
 #pragma warning(suppress: 26477)
@@ -1251,14 +1255,14 @@ void CTrayNotifyIcon::StopAnimation() noexcept
 	m_nNumIcons = 0;
 }
 
-bool CTrayNotifyIcon::UsingAnimatedIcon() const noexcept
+_Success_(return != false) bool CTrayNotifyIcon::UsingAnimatedIcon() const noexcept
 {
 	return (m_nNumIcons != 0);
 }
 
 HICON CTrayNotifyIcon::GetCurrentAnimationIcon() const noexcept
 {
-	//Valiate our parameters
+	//Validate our parameters
 #pragma warning(suppress: 26477)
 	ATLASSERT(UsingAnimatedIcon());
 #pragma warning(suppress: 26477)
@@ -1268,10 +1272,10 @@ HICON CTrayNotifyIcon::GetCurrentAnimationIcon() const noexcept
 	return m_Icons.m_pData[m_nCurrentIconIndex];
 }
 
-BOOL CTrayNotifyIcon::ProcessWindowMessage(_In_ HWND /*hWnd*/, _In_ UINT nMsg, _In_ WPARAM wParam, _In_ LPARAM lParam, _Inout_ LRESULT& lResult, _In_ DWORD /*dwMsgMapID*/) noexcept
+_Success_(return != FALSE) BOOL CTrayNotifyIcon::ProcessWindowMessage(_In_ HWND /*hWnd*/, _In_ UINT nMsg, _In_ WPARAM wParam, _In_ LPARAM lParam, _Inout_ LRESULT& lResult, _In_ DWORD /*dwMsgMapID*/) noexcept
 {
 	lResult = 0;
-	BOOL bHandled = FALSE;
+	BOOL bHandled{ FALSE };
 
 	if (nMsg == wm_TaskbarCreated)
 	{
@@ -1300,7 +1304,7 @@ void CTrayNotifyIcon::OnDestroy() noexcept
 LRESULT CTrayNotifyIcon::OnTaskbarCreated(WPARAM /*wParam*/, LPARAM /*lParam*/) noexcept
 {
 	//Refresh the tray icon if necessary
-	const bool bShowing = IsShowing();
+	const bool bShowing{ IsShowing() };
 	Delete(false);
 	Create(bShowing);
 
@@ -1330,7 +1334,7 @@ void CTrayNotifyIcon::OnTimer(UINT_PTR /*nIDEvent*/) noexcept
 	Shell_NotifyIcon(NIM_MODIFY, &m_NotifyIconData);
 }
 
-bool CTrayNotifyIcon::CreateHelperWindow()
+_Success_(return != false) bool CTrayNotifyIcon::CreateHelperWindow()
 {
 	//Let the base class do its thing
 	return (CWindowImpl<CTrayNotifyIcon>::Create(nullptr, CWindow::rcDefault, _T("CTrayNotifyIcon Helper Window"), WS_OVERLAPPEDWINDOW) != nullptr);

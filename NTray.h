@@ -3,7 +3,7 @@ Module : NTray.h
 Purpose: Interface for a C++ class to encapsulate the Shell_NotifyIcon API.
 Created: PJN / 14-05-1997
 
-Copyright (c) 1997 - 2021 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1997 - 2023 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -18,7 +18,7 @@ to maintain a single distribution point for the source code.
 */
 
 
-/////////////////////////// Macros / Defines ///////////////////////////
+//////////////////// Macros / Defines /////////////////////////////////////////
 
 #pragma once
 
@@ -45,7 +45,7 @@ to maintain a single distribution point for the source code.
 #endif //#if (NTDDI_VERSION < NTDDI_VISTA)
 
 
-/////////////////////////// Classes ///////////////////////////////////////////
+//////////////////// Classes //////////////////////////////////////////////////
 
 //the actual tray notification class wrapper
 class CTRAYNOTIFYICON_EXT_CLASS CTrayNotifyIcon : public ATL::CWindowImpl<CTrayNotifyIcon>
@@ -75,64 +75,66 @@ public:
 	CTrayNotifyIcon(_In_ const CTrayNotifyIcon&) = delete;
 	CTrayNotifyIcon(_In_ CTrayNotifyIcon&&) = delete;
 	~CTrayNotifyIcon(); //NOLINT(modernize-use-override)
+
+  //Methods
 	CTrayNotifyIcon& operator=(_In_ const CTrayNotifyIcon&) = delete;
 	CTrayNotifyIcon& operator=(_In_ CTrayNotifyIcon&&) = delete;
 
 	//Create the tray icon
 #ifdef _AFX
-	bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
-	bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
-	bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
-	bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
-	bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
-	bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
 #else
-	bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
-	bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
-	bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
-	bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
-	bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
-	bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
+	_Success_(return != false) bool Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID = 0, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr, _In_ bool bQuietTime = false, _In_ bool bShow = true);
 #endif //#ifdef _AFX
 
 	//Sets or Gets the tooltip text
-	bool SetTooltipText(_In_z_ LPCTSTR pszTooltipText) noexcept;
-	bool SetTooltipText(_In_ UINT nID);
+	_Success_(return != false) bool SetTooltipText(_In_z_ LPCTSTR pszTooltipText) noexcept;
+	_Success_(return != false) bool SetTooltipText(_In_ UINT nID);
 	_NODISCARD String GetTooltipText() const;
 
 	//Sets or Gets the icon displayed
-	bool SetIcon(_In_ HICON hIcon) noexcept;
-	bool SetIcon(_In_ const CBitmap* pBitmap);
-	bool SetIcon(_In_ LPCTSTR lpIconName);
-	bool SetIcon(_In_ UINT nIDResource);
-	bool SetIcon(_In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept;
-	bool SetStandardIcon(_In_ LPCTSTR lpIconName) noexcept;
-	bool SetStandardIcon(_In_ UINT nIDResource) noexcept;
+	_Success_(return != false) bool SetIcon(_In_ HICON hIcon) noexcept;
+	_Success_(return != false) bool SetIcon(_In_ const CBitmap* pBitmap);
+	_Success_(return != false) bool SetIcon(_In_ LPCTSTR lpIconName);
+	_Success_(return != false) bool SetIcon(_In_ UINT nIDResource);
+	_Success_(return != false) bool SetIcon(_In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept;
+	_Success_(return != false) bool SetStandardIcon(_In_ LPCTSTR lpIconName) noexcept;
+	_Success_(return != false) bool SetStandardIcon(_In_ UINT nIDResource) noexcept;
 	_NODISCARD HICON GetIcon() const noexcept;
-	_NODISCARD bool UsingAnimatedIcon() const noexcept;
+	_NODISCARD _Success_(return != false) bool UsingAnimatedIcon() const noexcept;
 
 	//Sets or Gets the window to send notification messages to
 #ifdef _AFX
-	bool SetNotificationWnd(_In_ CWnd* pNotifyWnd) noexcept;
+	_Success_(return != false) bool SetNotificationWnd(_In_ CWnd* pNotifyWnd) noexcept;
 	_NODISCARD CWnd* GetNotificationWnd() const noexcept;
 #else
-	bool SetNotificationWnd(_In_ CWindow* pNotifyWnd) noexcept;
+	_Success_(return != false) bool SetNotificationWnd(_In_ CWindow* pNotifyWnd) noexcept;
 	_NODISCARD CWindow* GetNotificationWnd() const noexcept;
 #endif //#ifdef _AFX
 
 	//Modification of the tray icons
-	bool Delete(_In_ bool bCloseHelperWindow = true) noexcept;
-	bool Create(_In_ bool bShow = true) noexcept;
-	bool Hide() noexcept;
-	bool Show() noexcept;
+	_Success_(return != false) bool Delete(_In_ bool bCloseHelperWindow = true) noexcept;
+	_Success_(return != false) bool Create(_In_ bool bShow = true) noexcept;
+	_Success_(return != false) bool Hide() noexcept;
+	_Success_(return != false) bool Show() noexcept;
 
 	//Dynamic tray icon support
-	HICON BitmapToIcon(_In_ const CBitmap* pBitmap);
-	static bool GetDynamicDCAndBitmap(_In_ CDC* pDC, _In_ CBitmap* pBitmap);
+	_NODISCARD HICON BitmapToIcon(_In_ const CBitmap* pBitmap);
+	static _Success_(return != false) bool GetDynamicDCAndBitmap(_In_ CDC* pDC, _In_ CBitmap* pBitmap);
 
 	//Modification of the menu to use as the context menu
 	void SetMenu(_In_ HMENU hMenu);
-	CMenu& GetMenu() noexcept;
+	_NODISCARD CMenu& GetMenu() noexcept;
 	void SetDefaultMenuItem(_In_ UINT uItem, _In_ bool fByPos);
 	void GetDefaultMenuItem(_Out_ UINT& uItem, _Out_ bool& fByPos) noexcept
 	{
@@ -144,18 +146,18 @@ public:
 	virtual LRESULT OnTrayNotification(WPARAM uID, LPARAM lEvent);
 
 	//Status information
-	_NODISCARD bool IsShowing() const noexcept { return !IsHidden(); };
-	_NODISCARD bool IsHidden() const noexcept { return m_bHidden; };
+	_NODISCARD _Success_(return != false) bool IsShowing() const noexcept { return !IsHidden(); };
+	_NODISCARD _Success_(return != false) bool IsHidden() const noexcept { return m_bHidden; };
 
 	//Sets or gets the Balloon style tooltip settings
-	bool SetBalloonDetails(_In_z_ LPCTSTR pszBalloonText, _In_z_ LPCTSTR pszBalloonCaption, _In_ BalloonStyle style, _In_ UINT nTimeout, _In_ HICON hUserIcon = nullptr, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_ HICON hBalloonIcon = nullptr) noexcept;
+	_Success_(return != false) bool SetBalloonDetails(_In_z_ LPCTSTR pszBalloonText, _In_z_ LPCTSTR pszBalloonCaption, _In_ BalloonStyle style, _In_ UINT nTimeout, _In_ HICON hUserIcon = nullptr, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_ HICON hBalloonIcon = nullptr) noexcept;
 	_NODISCARD String GetBalloonText() const;
 	_NODISCARD String GetBalloonCaption() const;
 	_NODISCARD UINT GetBalloonTimeout() const noexcept;
 
 	//Other functionality
-	bool SetVersion(_In_ UINT uVersion) noexcept;
-	bool SetFocus() noexcept;
+	_Success_(return != false) bool SetVersion(_In_ UINT uVersion) noexcept;
+	_Success_(return != false) bool SetFocus() noexcept;
 
 	//Helper methods to load tray icon from resources
 	static HICON LoadIcon(_In_ LPCTSTR lpIconName, _In_ bool bLargeIcon = false);
@@ -165,11 +167,11 @@ public:
 
 protected:
 	//Methods
-	bool CreateHelperWindow();
-	bool StartAnimation(_In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept;
+	_Success_(return != false) bool CreateHelperWindow();
+	_Success_(return != false) bool StartAnimation(_In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept;
 	void StopAnimation() noexcept;
 	_NODISCARD HICON GetCurrentAnimationIcon() const noexcept;
-	BOOL ProcessWindowMessage(_In_ HWND hWnd, _In_ UINT nMsg, _In_ WPARAM wParam, _In_ LPARAM lParam, _Inout_ LRESULT& lResult, _In_ DWORD dwMsgMapID) noexcept override;
+	_Success_(return != FALSE) BOOL ProcessWindowMessage(_In_ HWND hWnd, _In_ UINT nMsg, _In_ WPARAM wParam, _In_ LPARAM lParam, _Inout_ LRESULT& lResult, _In_ DWORD dwMsgMapID) noexcept override;
 	LRESULT OnTaskbarCreated(WPARAM wParam, LPARAM lParam) noexcept;
 	void OnTimer(UINT_PTR nIDEvent) noexcept;
 	void OnDestroy() noexcept;
