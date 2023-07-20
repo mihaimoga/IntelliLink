@@ -49,6 +49,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_WM_DESTROY()
 	ON_WM_TIMER()
 	ON_COMMAND(ID_STARTUP_APPS, &CMainFrame::OnStartupApps)
+	ON_COMMAND(ID_WEBSITE_REVIEW, &CMainFrame::OnWebsiteReview)
+	ON_COMMAND(ID_WEBMASTER_TOOLS, &CMainFrame::OnWebmasterTools)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -307,4 +309,14 @@ void CMainFrame::OnStartupApps()
 			RegCloseKey(regValue);
 		}
 	}
+}
+
+void CMainFrame::OnWebsiteReview()
+{
+	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://www.website-review.ro/"), nullptr, nullptr, SW_SHOW);
+}
+
+void CMainFrame::OnWebmasterTools()
+{
+	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://www.webmaster-tools.ro/"), nullptr, nullptr, SW_SHOW);
 }

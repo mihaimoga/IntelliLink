@@ -78,6 +78,8 @@ protected:
 	afx_msg void OnShowApplication();
 	afx_msg void OnHideApplication();
 	afx_msg void OnStartupApps();
+	afx_msg void OnWebsiteReview();
+	afx_msg void OnWebmasterTools();
 
 	DECLARE_MESSAGE_MAP()
 };
