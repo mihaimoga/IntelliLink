@@ -116,25 +116,6 @@ BOOL CIntelliLinkApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Mihai Moga"));
 
-	delete AfxGetApp()->m_pszExeName;
-	AfxGetApp()->m_pszExeName = new TCHAR[_MAX_PATH];
-
-	delete AfxGetApp()->m_pszProfileName;
-	AfxGetApp()->m_pszProfileName = new TCHAR[_MAX_PATH];
-
-	TCHAR lpszDrive[_MAX_DRIVE];
-	TCHAR lpszDirectory[_MAX_DIR];
-	TCHAR lpszFilename[_MAX_FNAME];
-	TCHAR lpszExtension[_MAX_EXT];
-
-	LPTSTR lpszHelpPath = (LPTSTR) AfxGetApp()->m_pszHelpFilePath;
-	LPTSTR lpszExePath = (LPTSTR) AfxGetApp()->m_pszExeName;
-	LPTSTR lpszIniPath = (LPTSTR) AfxGetApp()->m_pszProfileName;
-
-	VERIFY(0 == _tsplitpath_s(lpszHelpPath, lpszDrive, _MAX_DRIVE, lpszDirectory, _MAX_DIR, lpszFilename, _MAX_FNAME, lpszExtension, _MAX_EXT));
-	VERIFY(0 == _tmakepath_s(lpszExePath, _MAX_PATH, lpszDrive, lpszDirectory, lpszFilename, _T(".exe")));
-	VERIFY(0 == _tmakepath_s(lpszIniPath, _MAX_PATH, lpszDrive, lpszDirectory, lpszFilename, _T(".config")));
-
 	InitContextMenuManager();
 
 	InitKeyboardManager();
@@ -229,7 +210,16 @@ BOOL CAboutDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	if (m_pVersionInfo.Load(AfxGetApp()->m_pszExeName))
+	TCHAR lpszDrive[_MAX_DRIVE];
+	TCHAR lpszDirectory[_MAX_DIR];
+	TCHAR lpszFilename[_MAX_FNAME];
+	TCHAR lpszExtension[_MAX_EXT];
+	TCHAR lpszFullPath[_MAX_PATH];
+
+	VERIFY(0 == _tsplitpath_s(AfxGetApp()->m_pszHelpFilePath, lpszDrive, _MAX_DRIVE, lpszDirectory, _MAX_DIR, lpszFilename, _MAX_FNAME, lpszExtension, _MAX_EXT));
+	VERIFY(0 == _tmakepath_s(lpszFullPath, _MAX_PATH, lpszDrive, lpszDirectory, lpszFilename, _T(".exe")));
+
+	if (m_pVersionInfo.Load(lpszFullPath))
 	{
 		CString strName = m_pVersionInfo.GetProductName().c_str();
 		CString strVersion = m_pVersionInfo.GetProductVersionAsString().c_str();
@@ -238,13 +228,19 @@ BOOL CAboutDlg::OnInitDialog()
 		const int nFirst = strVersion.Find(_T('.'));
 		const int nSecond = strVersion.Find(_T('.'), nFirst + 1);
 		strVersion.Truncate(nSecond);
-		m_ctrlVersion.SetWindowText(strName + _T(" version ") + strVersion);
+#if _WIN32 || _WIN64
+#if _WIN64
+		m_ctrlVersion.SetWindowText(strName + _T(" version ") + strVersion + _T(" (64-bit)"));
+#else
+		m_ctrlVersion.SetWindowText(strName + _T(" version ") + strVersion + _T(" (32-bit)"));
+#endif
+#endif
 	}
 
 	m_ctrlWarning.SetWindowText(_T("This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>."));
 
-	m_ctrlWebsite.SetHyperLink(_T("http://www.emvs.site/"));
-	m_ctrlEmail.SetHyperLink(_T("mailto:contact@emvs.site"));
+	m_ctrlWebsite.SetHyperLink(_T("https://www.moga.doctor/"));
+	m_ctrlEmail.SetHyperLink(_T("mailto:stefan-mihai@moga.doctor"));
 	m_ctrlContributors.SetHyperLink(_T("https://github.com/mihaimoga/IntelliLink/graphs/contributors"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control

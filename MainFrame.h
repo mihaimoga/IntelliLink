@@ -80,6 +80,13 @@ protected:
 	afx_msg void OnStartupApps();
 	afx_msg void OnWebsiteReview();
 	afx_msg void OnWebmasterTools();
+	afx_msg void OnTwitter();
+	afx_msg void OnLinkedin();
+	afx_msg void OnFacebook();
+	afx_msg void OnInstagram();
+	afx_msg void OnIssues();
+	afx_msg void OnDiscussions();
+	afx_msg void OnWiki();
 
 	DECLARE_MESSAGE_MAP()
 };

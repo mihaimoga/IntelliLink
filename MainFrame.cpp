@@ -43,14 +43,21 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND(ID_REMOVE, &CMainFrame::OnLinkRemove)
 	ON_UPDATE_COMMAND_UI(ID_MODIFY, &CMainFrame::OnUpdateModify)
 	ON_UPDATE_COMMAND_UI(ID_REMOVE, &CMainFrame::OnUpdateRemove)
-	ON_COMMAND(ID_SHOW_APPLICATION, &CMainFrame::OnShowApplication)
-	ON_COMMAND(ID_HIDE_APPLICATION, &CMainFrame::OnHideApplication)
+	ON_COMMAND(IDC_SHOW_APPLICATION, &CMainFrame::OnShowApplication)
+	ON_COMMAND(IDC_HIDE_APPLICATION, &CMainFrame::OnHideApplication)
 	ON_MESSAGE(WM_TRAYNOTIFY, OnTrayNotification)
 	ON_WM_DESTROY()
 	ON_WM_TIMER()
-	ON_COMMAND(ID_STARTUP_APPS, &CMainFrame::OnStartupApps)
-	ON_COMMAND(ID_WEBSITE_REVIEW, &CMainFrame::OnWebsiteReview)
-	ON_COMMAND(ID_WEBMASTER_TOOLS, &CMainFrame::OnWebmasterTools)
+	ON_COMMAND(IDC_STARTUP_APPS, &CMainFrame::OnStartupApps)
+	ON_COMMAND(IDC_WEBSITE_REVIEW, &CMainFrame::OnWebsiteReview)
+	ON_COMMAND(IDC_WEBMASTER_TOOLS, &CMainFrame::OnWebmasterTools)
+	ON_COMMAND(IDC_TWITTER, &CMainFrame::OnTwitter)
+	ON_COMMAND(IDC_LINKEDIN, &CMainFrame::OnLinkedin)
+	ON_COMMAND(IDC_FACEBOOK, &CMainFrame::OnFacebook)
+	ON_COMMAND(IDC_INSTAGRAM, &CMainFrame::OnInstagram)
+	ON_COMMAND(IDC_ISSUES, &CMainFrame::OnIssues)
+	ON_COMMAND(IDC_DISCUSSIONS, &CMainFrame::OnDiscussions)
+	ON_COMMAND(IDC_WIKI, &CMainFrame::OnWiki)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -319,4 +326,39 @@ void CMainFrame::OnWebsiteReview()
 void CMainFrame::OnWebmasterTools()
 {
 	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://www.webmaster-tools.ro/"), nullptr, nullptr, SW_SHOW);
+}
+
+void CMainFrame::OnTwitter()
+{
+	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://twitter.com/stefanmihaimoga"), nullptr, nullptr, SW_SHOW);
+}
+
+void CMainFrame::OnLinkedin()
+{
+	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://www.linkedin.com/in/stefanmihaimoga/"), nullptr, nullptr, SW_SHOW);
+}
+
+void CMainFrame::OnFacebook()
+{
+	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://www.facebook.com/stefanmihaimoga"), nullptr, nullptr, SW_SHOW);
+}
+
+void CMainFrame::OnInstagram()
+{
+	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://www.instagram.com/stefanmihaimoga/"), nullptr, nullptr, SW_SHOW);
+}
+
+void CMainFrame::OnIssues()
+{
+	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://github.com/mihaimoga/IntelliLink/issues"), nullptr, nullptr, SW_SHOW);
+}
+
+void CMainFrame::OnDiscussions()
+{
+	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://github.com/mihaimoga/IntelliLink/discussions"), nullptr, nullptr, SW_SHOW);
+}
+
+void CMainFrame::OnWiki()
+{
+	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://github.com/mihaimoga/IntelliLink/wiki"), nullptr, nullptr, SW_SHOW);
 }
