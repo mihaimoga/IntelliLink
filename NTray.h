@@ -76,7 +76,7 @@ public:
 	CTrayNotifyIcon(_In_ CTrayNotifyIcon&&) = delete;
 	~CTrayNotifyIcon(); //NOLINT(modernize-use-override)
 
-  //Methods
+	//Methods
 	CTrayNotifyIcon& operator=(_In_ const CTrayNotifyIcon&) = delete;
 	CTrayNotifyIcon& operator=(_In_ CTrayNotifyIcon&&) = delete;
 
@@ -150,7 +150,7 @@ public:
 	_NODISCARD _Success_(return != false) bool IsHidden() const noexcept { return m_bHidden; };
 
 	//Sets or gets the Balloon style tooltip settings
-	_Success_(return != false) bool SetBalloonDetails(_In_z_ LPCTSTR pszBalloonText, _In_z_ LPCTSTR pszBalloonCaption, _In_ BalloonStyle style, _In_ UINT nTimeout, _In_ HICON hUserIcon = nullptr, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_ HICON hBalloonIcon = nullptr) noexcept;
+	_Success_(return != false) bool SetBalloonDetails(_In_z_ LPCTSTR pszBalloonText, _In_z_ LPCTSTR pszBalloonCaption, _In_ BalloonStyle style, _In_ UINT nTimeout, _In_opt_ HICON hUserIcon = nullptr, _In_ bool bNoSound = false, _In_ bool bLargeIcon = false, _In_ bool bRealtime = false, _In_opt_ HICON hBalloonIcon = nullptr) noexcept;
 	_NODISCARD String GetBalloonText() const;
 	_NODISCARD String GetBalloonCaption() const;
 	_NODISCARD UINT GetBalloonTimeout() const noexcept;
@@ -178,6 +178,7 @@ protected:
 
 	//Member variables
 	NOTIFYICONDATA m_NotifyIconData;
+	UINT m_NotifyIconDataTimeout;
 	bool m_bCreated;
 	bool m_bHidden;
 #ifdef _AFX
