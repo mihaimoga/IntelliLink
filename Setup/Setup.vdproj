@@ -51,6 +51,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BFD6D9FBD5D34FD2818CFB4279042DA2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C076CCDAC6279675F48A602EADC6ED8F"
         "OwnerKey" = "8:_28C08AB3410242A7A54B8369AEF50EEF"
         "MsmSig" = "8:_UNDEFINED"
@@ -260,6 +266,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BFD6D9FBD5D34FD2818CFB4279042DA2"
+            {
+            "SourcePath" = "8:..\\hlp\\IntelliLink.chm"
+            "TargetName" = "8:IntelliLink.chm"
+            "Tag" = "8:"
+            "Folder" = "8:_91F2F8CD0D044568B8467531A259F534"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C076CCDAC6279675F48A602EADC6ED8F"
             {
             "SourcePath" = "8:UxTheme.dll"
@@ -396,8 +422,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:IntelliLink"
-        "ProductCode" = "8:{78324A8C-6A98-4E2D-8B49-9866AE75068B}"
-        "PackageCode" = "8:{7857A3B3-359E-42BB-9D45-A8A59E71067F}"
+        "ProductCode" = "8:{7A45D330-36F9-4E8B-B744-2C27FDBD04F0}"
+        "PackageCode" = "8:{CE7097B4-723A-41E2-8C36-385943CB4D4E}"
         "UpgradeCode" = "8:{C3F63351-8016-4B2A-893A-003E83772952}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"

@@ -224,6 +224,10 @@ History: PJN / 25-11-1997 Addition of the following
                           2. Updated the code to use C++ uniform initialization for all variable declarations
          PJN / 18-06-2023 1. Updated copyright details.
                           2. Added additional SAL annotations to the code.
+         PJN / 28-10-2023 1. Fixed an issue where the CTrayNotifyIcon::OnTrayNotification callback method would 
+                          not work correctly if the m_NotifyIconData.uTimeout member variable gets updated during runtime of 
+                          client applications. This can occur when you call CTrayNotifyIcon::SetBalloonDetails. Thanks to 
+                          Maisala Tuomo for reporting this bug.
 
 Copyright (c) 1997 - 2023 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -269,6 +273,7 @@ to maintain a single distribution point for the source code.
 const UINT wm_TaskbarCreated = RegisterWindowMessage(_T("TaskbarCreated"));
 
 CTrayNotifyIcon::CTrayNotifyIcon() noexcept : m_NotifyIconData{},
+m_NotifyIconDataTimeout{ 0 },
 m_bCreated{ false },
 m_bHidden{ false },
 m_pNotificationWnd{ nullptr },
@@ -428,10 +433,10 @@ void CTrayNotifyIcon::SetDefaultMenuItem(_In_ UINT uItem, _In_ bool fByPos)
 
 #ifdef _AFX
 #pragma warning(suppress: 26434)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Validate our parameters
@@ -511,7 +516,7 @@ _Success_(return != false) bool CTrayNotifyIcon::SetVersion(_In_ UINT uVersion) 
 	return Shell_NotifyIcon(NIM_SETVERSION, &m_NotifyIconData);
 }
 
-HICON CTrayNotifyIcon::BitmapToIcon(_In_ const CBitmap* pBitmap)
+HICON CTrayNotifyIcon::BitmapToIcon(_In_ const CBitmap * pBitmap)
 {
 	//Validate our parameters
 #pragma warning(suppress: 26477)
@@ -560,10 +565,10 @@ HICON CTrayNotifyIcon::BitmapToIcon(_In_ const CBitmap* pBitmap)
 
 #ifdef _AFX
 #pragma warning(suppress: 26434)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap * pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ const CBitmap * pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Convert the bitmap to an Icon
@@ -577,10 +582,10 @@ _Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd
 
 #ifdef _AFX
 #pragma warning(suppress: 26434 26487)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON * phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434 26487)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ HICON * phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Validate our parameters
@@ -605,10 +610,10 @@ _Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd
 
 #ifdef _AFX
 #pragma warning(suppress: 26434)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON hIcon, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Validate our parameters
@@ -664,6 +669,7 @@ _Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd
 #pragma warning(suppress: 26485)
 	_tcsncpy_s(m_NotifyIconData.szInfoTitle, _countof(m_NotifyIconData.szInfoTitle), pszBalloonCaption, _TRUNCATE);
 	m_NotifyIconData.uTimeout = nTimeout;
+	m_NotifyIconDataTimeout = nTimeout;
 	switch (style)
 	{
 		case BalloonStyle::Warning:
@@ -735,10 +741,10 @@ _Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd
 
 #ifdef _AFX
 #pragma warning(suppress: 26434)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap * pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap* pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ const CBitmap * pBitmap, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Convert the bitmap to an ICON
@@ -752,10 +758,10 @@ _Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd
 
 #ifdef _AFX
 #pragma warning(suppress: 26434 26487)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWnd * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON * phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #else
 #pragma warning(suppress: 26434 26487)
-_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
+_Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow * pNotifyWnd, _In_ UINT uID, _In_z_ LPCTSTR pszTooltipText, _In_ LPCTSTR pszBalloonText, _In_ LPCTSTR pszBalloonCaption, _In_ UINT nTimeout, _In_ BalloonStyle style, _In_ HICON * phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay, _In_ UINT nNotifyMessage, _In_ UINT uMenuID, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon, _In_ bool bQuietTime, _In_ bool bShow)
 #endif //#ifdef _AFX
 {
 	//Validate our parameters
@@ -778,7 +784,7 @@ _Success_(return != false) bool CTrayNotifyIcon::Create(_In_ CWindow* pNotifyWnd
 	return bSuccess;
 }
 
-_Success_(return != false) bool CTrayNotifyIcon::SetBalloonDetails(_In_z_ LPCTSTR pszBalloonText, _In_z_ LPCTSTR pszBalloonCaption, _In_ BalloonStyle style, _In_ UINT nTimeout, _In_ HICON hUserIcon, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_ HICON hBalloonIcon) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetBalloonDetails(_In_z_ LPCTSTR pszBalloonText, _In_z_ LPCTSTR pszBalloonCaption, _In_ BalloonStyle style, _In_ UINT nTimeout, _In_opt_ HICON hUserIcon, _In_ bool bNoSound, _In_ bool bLargeIcon, _In_ bool bRealtime, _In_opt_ HICON hBalloonIcon) noexcept
 {
 	if (!m_bCreated)
 		return false;
@@ -789,7 +795,12 @@ _Success_(return != false) bool CTrayNotifyIcon::SetBalloonDetails(_In_z_ LPCTST
 	_tcsncpy_s(m_NotifyIconData.szInfo, _countof(m_NotifyIconData.szInfo), pszBalloonText, _TRUNCATE);
 #pragma warning(suppress: 26485)
 	_tcsncpy_s(m_NotifyIconData.szInfoTitle, _countof(m_NotifyIconData.szInfoTitle), pszBalloonCaption, _TRUNCATE);
+	//Save a copy of uVersion as uTimeout is a union of it, meaning that writing to uTimeout overwrites uVersion.
+	//Because this class requires uVersion to be a specific value in its OnTrayNotification method, we restore
+	//this value at the bottom of this method.
+	const auto uOldVersion = m_NotifyIconData.uVersion;
 	m_NotifyIconData.uTimeout = nTimeout;
+	m_NotifyIconDataTimeout = nTimeout;
 	switch (style)
 	{
 	case BalloonStyle::Warning:
@@ -840,7 +851,10 @@ _Success_(return != false) bool CTrayNotifyIcon::SetBalloonDetails(_In_z_ LPCTST
 		m_NotifyIconData.dwInfoFlags |= NIIF_LARGE_ICON;
 	if (bRealtime)
 		m_NotifyIconData.uFlags |= NIF_REALTIME;
-	return Shell_NotifyIcon(NIM_MODIFY, &m_NotifyIconData);
+	const bool bSuccess = Shell_NotifyIcon(NIM_MODIFY, &m_NotifyIconData);
+	//Preserve the value in the "uVersion" member variable. See the comments above.
+	m_NotifyIconData.uVersion = uOldVersion;
+	return bSuccess;
 }
 
 CTrayNotifyIcon::String CTrayNotifyIcon::GetBalloonText() const
@@ -865,7 +879,7 @@ UINT CTrayNotifyIcon::GetBalloonTimeout() const noexcept
 {
 	UINT nTimeout{ 0 };
 	if (m_bCreated)
-		nTimeout = m_NotifyIconData.uTimeout;
+		nTimeout = m_NotifyIconDataTimeout;
 	return nTimeout;
 }
 
@@ -892,7 +906,7 @@ _Success_(return != false) bool CTrayNotifyIcon::SetTooltipText(_In_ UINT nID)
 }
 
 #pragma warning(suppress: 26434)
-_Success_(return != false) bool CTrayNotifyIcon::SetIcon(_In_ const CBitmap* pBitmap)
+_Success_(return != false) bool CTrayNotifyIcon::SetIcon(_In_ const CBitmap * pBitmap)
 {
 	//Convert the bitmap to an ICON
 	if (m_hDynamicIcon != nullptr)
@@ -945,7 +959,7 @@ _Success_(return != false) bool CTrayNotifyIcon::SetStandardIcon(_In_ UINT nIDRe
 }
 
 #pragma warning(suppress: 26434 26487)
-_Success_(return != false) bool CTrayNotifyIcon::SetIcon(_In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetIcon(_In_ HICON * phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept
 {
 	//Validate our parameters
 #pragma warning(suppress: 26477)
@@ -988,9 +1002,9 @@ HICON CTrayNotifyIcon::LoadIcon(_In_ UINT nIDResource, _In_ bool bLargeIcon)
 }
 
 #ifdef _AFX
-_Success_(return != false) bool CTrayNotifyIcon::SetNotificationWnd(_In_ CWnd* pNotifyWnd) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetNotificationWnd(_In_ CWnd * pNotifyWnd) noexcept
 #else
-_Success_(return != false) bool CTrayNotifyIcon::SetNotificationWnd(_In_ CWindow* pNotifyWnd) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::SetNotificationWnd(_In_ CWindow * pNotifyWnd) noexcept
 #endif //#ifdef _AFX
 {
 	//Validate our parameters
@@ -1112,7 +1126,7 @@ LRESULT CTrayNotifyIcon::OnTrayNotification(WPARAM wParam, LPARAM lParam)
 	return 1; // handled
 }
 
-_Success_(return != false) bool CTrayNotifyIcon::GetDynamicDCAndBitmap(_In_ CDC* pDC, _In_ CBitmap* pBitmap)
+_Success_(return != false) bool CTrayNotifyIcon::GetDynamicDCAndBitmap(_In_ CDC * pDC, _In_ CBitmap * pBitmap)
 {
 	//Validate our parameters
 #pragma warning(suppress: 26477)
@@ -1205,7 +1219,7 @@ _Success_(return != false) bool CTrayNotifyIcon::GetDynamicDCAndBitmap(_In_ CDC*
 }
 
 #pragma warning(suppress: 26487)
-_Success_(return != false) bool CTrayNotifyIcon::StartAnimation(_In_ HICON* phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept
+_Success_(return != false) bool CTrayNotifyIcon::StartAnimation(_In_ HICON * phIcons, _In_ int nNumIcons, _In_ DWORD dwDelay) noexcept
 {
 	//Validate our parameters
 #pragma warning(suppress: 26477)
@@ -1272,7 +1286,7 @@ HICON CTrayNotifyIcon::GetCurrentAnimationIcon() const noexcept
 	return m_Icons.m_pData[m_nCurrentIconIndex];
 }
 
-_Success_(return != FALSE) BOOL CTrayNotifyIcon::ProcessWindowMessage(_In_ HWND /*hWnd*/, _In_ UINT nMsg, _In_ WPARAM wParam, _In_ LPARAM lParam, _Inout_ LRESULT& lResult, _In_ DWORD /*dwMsgMapID*/) noexcept
+_Success_(return != FALSE) BOOL CTrayNotifyIcon::ProcessWindowMessage(_In_ HWND /*hWnd*/, _In_ UINT nMsg, _In_ WPARAM wParam, _In_ LPARAM lParam, _Inout_ LRESULT & lResult, _In_ DWORD /*dwMsgMapID*/) noexcept
 {
 	lResult = 0;
 	BOOL bHandled{ FALSE };
