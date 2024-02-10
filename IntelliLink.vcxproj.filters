@@ -276,6 +276,9 @@
     <None Include="res\sad.ico">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="LICENSE" />
+    <None Include="ReleaseNotes.html" />
+    <None Include="SoftwareContextRegister.html" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IntelliLink.h">
