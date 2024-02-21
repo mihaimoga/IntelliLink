@@ -80,20 +80,20 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	BOOL bNameValid;
-
-	// set the visual manager used to draw all user interface elements
-	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
-
-	// set the visual style to be used the by the visual manager
-	CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Silver);
-
 	/* create a view to occupy the client area of the frame
 	if (!m_wndView.Create(nullptr, nullptr, AFX_WS_DEFAULT_VIEW, CRect(0, 0, 0, 0), this, AFX_IDW_PANE_FIRST, nullptr))
 	{
 		TRACE0("Failed to create view window\n");
 		return -1;
 	}*/
+
+	// enable Visual Studio 2005 style docking window behavior
+	CDockingManager::SetDockingMode(DT_SMART);
+	// enable Visual Studio 2005 style docking window auto-hide behavior
+	EnableAutoHidePanes(CBRS_ALIGN_ANY);
+
+	// set the visual manager used to draw all user interface elements
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
 
 	m_wndRibbonBar.Create(this);
 	m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
@@ -108,17 +108,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // fail to create
 	}
 
+	BOOL bNameValid;
 	CString strTitlePane;
 	bNameValid = strTitlePane.LoadString(IDS_STATUS_PANE1);
 	ASSERT(bNameValid);
 	m_wndStatusBar.AddElement(new CMFCRibbonStatusBarPane(
 		ID_STATUSBAR_PANE1, strTitlePane, TRUE, nullptr,
 		_T("012345678901234567890123456789012345678901234567890123456789")), strTitlePane);
-
-	// enable Visual Studio 2005 style docking window behavior
-	CDockingManager::SetDockingMode(DT_SMART);
-	// enable Visual Studio 2005 style docking window auto-hide behavior
-	EnableAutoHidePanes(CBRS_ALIGN_ANY);
 
 	// if (!m_pTrayIcon.Create(this, IDR_TRAYPOPUP, _T("Static Tray Icon"), _T("Demo Tray Application"), _T("Static Tray Icon"), 10, CTrayNotifyIcon::User, m_hIcons[0], WM_TRAYNOTIFY))
 	if (!m_pTrayIcon.Create(this, IDR_TRAYPOPUP, _T("IntelliLink"), m_hIcons[0], WM_TRAYNOTIFY))

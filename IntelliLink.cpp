@@ -15,8 +15,6 @@ IntelliLink. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 //
 
 #include "stdafx.h"
-#include "afxwinappex.h"
-#include "afxdialogex.h"
 #include "IntelliLink.h"
 #include "MainFrame.h"
 
@@ -140,8 +138,8 @@ BOOL CIntelliLinkApp::InitInstance()
 	// The one and only window has been initialized, so show and update it
 	pFrame->ShowWindow(SW_HIDE);
 	pFrame->UpdateWindow();
-	// call DragAcceptFiles only if there's a suffix
-	//  In an SDI app, this should occur after ProcessShellCommand
+	// pFrame->MoveWindow(CRect(0, 0, 800, 600));
+	// pFrame->CenterWindow();
 
 	// If this is the first instance of our App then track it so any other instances can find us
 	m_pInstanceChecker.TrackFirstInstanceRunning(m_pMainWnd->GetSafeHwnd());
