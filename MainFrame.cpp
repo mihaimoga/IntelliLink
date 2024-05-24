@@ -327,7 +327,7 @@ void CMainFrame::OnWebmasterTools()
 
 void CMainFrame::OnTwitter()
 {
-	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://twitter.com/stefanmihaimoga"), nullptr, nullptr, SW_SHOW);
+	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://x.com/stefanmihaimoga"), nullptr, nullptr, SW_SHOW);
 }
 
 void CMainFrame::OnLinkedin()
