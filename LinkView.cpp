@@ -80,9 +80,7 @@ void CLinkView::OnInitialUpdate()
 		const int nTargetURL = theApp.GetInt(_T("TargetURL"), TARGET_URL_LENGTH);
 		const int nURLName = theApp.GetInt(_T("URLName"), URL_NAME_LENGTH);
 		const int nPageRank = theApp.GetInt(_T("PageRank"), PAGE_RANK_LENGTH);
-
-		// theApp.GetInt(_T("Status"), STATUS_COLUMN_SIZE)
-		const int nStatus = rectClient.Width() - (nSourceURL + nTargetURL + nURLName + nPageRank);
+		const int nStatus = theApp.GetInt(_T("Status"), STATUS_LENGTH);
 
 		GetListCtrl().InsertColumn(0, _T("Source URL"), LVCFMT_LEFT, nSourceURL);
 		GetListCtrl().InsertColumn(1, _T("Target URL"), LVCFMT_LEFT, nTargetURL);
@@ -149,17 +147,12 @@ void CLinkView::ResizeListCtrl()
 					if (pHeaderCtrl.GetItem(3, &hdItem))
 					{
 						const int nPageRank = hdItem.cxy;
-						theApp.WriteInt(_T("PageRank"), nURLName);
-
-						const int nStatus = rectClient.Width() - (nSourceURL + nTargetURL + nURLName + nPageRank);
+						theApp.WriteInt(_T("PageRank"), nPageRank);
+						hdItem.mask = HDI_WIDTH;
 						if (pHeaderCtrl.GetItem(4, &hdItem))
 						{
-							hdItem.cxy = nStatus;
-							if (pHeaderCtrl.SetItem(4, &hdItem))
-							{
-								GetListCtrl().Invalidate();
-								GetListCtrl().UpdateWindow();
-							}
+							const int nStatus = hdItem.cxy;
+							theApp.WriteInt(_T("Status"), nStatus);
 						}
 					}
 				}

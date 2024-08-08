@@ -74,6 +74,7 @@ extern CComModule _Module;
 #define TARGET_URL_LENGTH 200
 #define URL_NAME_LENGTH 200
 #define PAGE_RANK_LENGTH 100
+#define STATUS_LENGTH 100
 
 #define MAX_STR_LENGTH 0x1000
 #define MAX_URL_LENGTH 0x1000
