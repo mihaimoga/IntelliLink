@@ -282,6 +282,7 @@
     <None Include="CODE_OF_CONDUCT.md" />
     <None Include="CONTRIBUTING.md" />
     <None Include="README.md" />
+    <None Include="IntelliLink.html" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IntelliLink.h">
@@ -404,5 +405,8 @@
     <CustomBuild Include="Resource.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="IntelliLink.png" />
   </ItemGroup>
 </Project>
