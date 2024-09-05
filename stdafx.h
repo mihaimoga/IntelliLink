@@ -27,6 +27,10 @@ IntelliLink. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
 #endif
 
+#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+#define _CRT_SECURE_NO_WARNINGS
+#include <codecvt>
+
 #include "targetver.h"
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
@@ -79,6 +83,9 @@ extern CComModule _Module;
 
 #define MAX_STR_LENGTH 0x1000
 #define MAX_URL_LENGTH 0x1000
+
+#define APPLICATION_NAME "IntelliLink"
+#define XML_CONFIGURATION "IntelliLink.xml"
 
 #include <string>
 #include <sstream>

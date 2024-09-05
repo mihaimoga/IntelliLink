@@ -19,9 +19,7 @@ IntelliLink. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include "stdafx.h"
 #include "IntelliLink.h"
 #include "LinkList.h"
-#include "Xml.h"
-
-using namespace JWXml;
+#include "tinyxml2.h"
 
 IMPLEMENT_DYNAMIC(CLinkData, CObject)
 
@@ -210,66 +208,83 @@ bool CLinkSnapshot::DeleteLink(DWORD dwLinkID)
 	return false;
 }
 
+std::wstring utf8_to_wstring(const std::string& str)
+{
+	// convert UTF-8 string to wstring
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
+	return myconv.from_bytes(str);
+}
+
+std::string wstring_to_utf8(const std::wstring& str)
+{
+	// convert wstring to UTF-8 string
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
+	return myconv.to_bytes(str);
+}
+
 bool CLinkSnapshot::LoadConfig()
 {
+	/* https://shilohjames.wordpress.com/2014/04/27/tinyxml2-tutorial/ */
 	VERIFY(RemoveAll());
-	m_dwLastID = 0;
-	CXml pXmlDocument;
-	if (pXmlDocument.Open(AfxGetApp()->m_pszProfileName))
+	int dwLastID = 0;
+	const char* lpszSource = nullptr;
+	const char* lpszTarget = nullptr;
+	const char* lpszURL_Name = nullptr;
+	int nPageRank = 0;
+	tinyxml2::XMLDocument xmlDocument;
+	if (xmlDocument.LoadFile(XML_CONFIGURATION) == tinyxml2::XML_SUCCESS)
 	{
-		CXmlNodePtr pXmlRoot = pXmlDocument.GetRoot();
-		// if (pXmlRoot != nullptr)
+		tinyxml2::XMLNode* xmlRoot = xmlDocument.FirstChild();
+		if (xmlRoot != nullptr)
 		{
-			CXmlNodesPtr pXMLChildren = pXmlRoot->GetChildren();
-			// if (pXMLChildren != nullptr)
+			tinyxml2::XMLElement* xmlElement = xmlRoot->FirstChildElement("URL");
+			while (xmlElement != nullptr)
 			{
-				const int nSize = pXMLChildren->GetCount();
-				for (int nIndex = 0; nIndex < nSize; nIndex++)
+				if ((xmlElement->QueryAttribute("Source", &lpszSource) == tinyxml2::XML_SUCCESS) &&
+					(xmlElement->QueryAttribute("Target", &lpszTarget) == tinyxml2::XML_SUCCESS) &&
+					(xmlElement->QueryAttribute("Name", &lpszURL_Name) == tinyxml2::XML_SUCCESS) &&
+					(xmlElement->QueryAttribute("PageRank", &nPageRank) == tinyxml2::XML_SUCCESS))
 				{
-					CXmlNodePtr pXmlChild = pXMLChildren->GetItem(nIndex);
-					//  if (pXmlChild != nullptr)
-					{
-						DWORD dwLastID = pXmlChild->GetValue((DWORD) 0);
-						if (m_dwLastID < dwLastID) m_dwLastID = dwLastID;
-						CString strSourceURL = pXmlChild->GetAttribute(_T("Source"));
-						CString strTargetURL = pXmlChild->GetAttribute(_T("Target"));
-						CString strURLName = pXmlChild->GetAttribute(_T("Name"));
-						int nPageRank = pXmlChild->GetAttribute(_T("PageRank"), (DWORD) 0);
-						CLinkData* pLinkData = new CLinkData(dwLastID, strSourceURL, strTargetURL, strURLName, nPageRank, false);
-						m_arrLinkList.Add(pLinkData);
-					}
+					CString strSourceURL = utf8_to_wstring(lpszSource).c_str();
+					CString strTargetURL = utf8_to_wstring(lpszTarget).c_str();
+					CString strURL_Name = utf8_to_wstring(lpszURL_Name).c_str();
+					CLinkData* pLinkData = new CLinkData(dwLastID++, strSourceURL, strTargetURL, strURL_Name, nPageRank, false);
+					m_arrLinkList.Add(pLinkData);
 				}
+				xmlElement = xmlElement->NextSiblingElement("URL");
 			}
+			return true;
 		}
-		return true;
 	}
 	return false;
 }
 
 bool CLinkSnapshot::SaveConfig()
 {
-	CXml pXmlDocument;
-	VERIFY(pXmlDocument.Create());
-	CXmlNodePtr pXmlRoot = pXmlDocument.GetRoot();
-	// if (pXmlRoot != nullptr)
+	/* https://shilohjames.wordpress.com/2014/04/27/tinyxml2-tutorial/ */
+	tinyxml2::XMLDocument xmlDocument;
+	tinyxml2::XMLElement* xmlRoot = xmlDocument.NewElement(APPLICATION_NAME);
+	if (xmlRoot != nullptr)
 	{
+		xmlDocument.InsertFirstChild(xmlRoot);
 		const int nSize = (int)m_arrLinkList.GetSize();
 		for (int nIndex = 0; nIndex < nSize; nIndex++)
 		{
 			CLinkData* pLinkData = m_arrLinkList.GetAt(nIndex);
 			ASSERT(pLinkData != nullptr);
-			CXmlNodePtr pXmlChild = pXmlRoot->NewChild(_T("URL"));
-			// if (pXmlChild != nullptr)
+			tinyxml2::XMLElement* xmlElement = xmlDocument.NewElement("URL");
+			if (xmlElement != nullptr)
 			{
-				pXmlChild->SetAttribute(_T("Source"), pLinkData->GetSourceURL());
-				pXmlChild->SetAttribute(_T("Target"), pLinkData->GetTargetURL());
-				pXmlChild->SetAttribute(_T("Name"), pLinkData->GetURLName());
-				pXmlChild->SetAttribute(_T("PageRang"), pLinkData->GetPageRank());
-				pXmlChild->SetValue(pLinkData->GetLinkID());
+				xmlElement->SetAttribute("Source", wstring_to_utf8(std::wstring(pLinkData->GetSourceURL())).c_str());
+				xmlElement->SetAttribute("Target", wstring_to_utf8(std::wstring(pLinkData->GetTargetURL())).c_str());
+				xmlElement->SetAttribute("Name", wstring_to_utf8(std::wstring(pLinkData->GetURLName())).c_str());
+				xmlElement->SetAttribute("PageRank", pLinkData->GetPageRank());
+				xmlElement->SetText((int)pLinkData->GetLinkID());
+				xmlRoot->InsertEndChild(xmlElement);
 			}
 		}
-		VERIFY(pXmlDocument.SaveWithFormatted(AfxGetApp()->m_pszProfileName));
-		return true;
+		if (xmlDocument.SaveFile(XML_CONFIGURATION) == tinyxml2::XML_SUCCESS)
+			return true;
 	}
 	return false;
 }
