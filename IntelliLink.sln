@@ -4,8 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntelliLink", "IntelliLink.vcxproj", "{381CDF5C-85BD-4681-AD6A-38F8CEB7F0B1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B404DF9B-63E6-4D23-8116-A0C28B9DA2A7} = {B404DF9B-63E6-4D23-8116-A0C28B9DA2A7}
+	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{193AA3F7-7457-4D29-BDB5-22B21573677B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "genUp4win", "genUp4win\genUp4win.vcxproj", "{B404DF9B-63E6-4D23-8116-A0C28B9DA2A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +32,14 @@ Global
 		{193AA3F7-7457-4D29-BDB5-22B21573677B}.Debug|x64.ActiveCfg = Debug
 		{193AA3F7-7457-4D29-BDB5-22B21573677B}.Release|Win32.ActiveCfg = Release
 		{193AA3F7-7457-4D29-BDB5-22B21573677B}.Release|x64.ActiveCfg = Release
+		{B404DF9B-63E6-4D23-8116-A0C28B9DA2A7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B404DF9B-63E6-4D23-8116-A0C28B9DA2A7}.Debug|Win32.Build.0 = Debug|Win32
+		{B404DF9B-63E6-4D23-8116-A0C28B9DA2A7}.Debug|x64.ActiveCfg = Debug|x64
+		{B404DF9B-63E6-4D23-8116-A0C28B9DA2A7}.Debug|x64.Build.0 = Debug|x64
+		{B404DF9B-63E6-4D23-8116-A0C28B9DA2A7}.Release|Win32.ActiveCfg = Release|Win32
+		{B404DF9B-63E6-4D23-8116-A0C28B9DA2A7}.Release|Win32.Build.0 = Release|Win32
+		{B404DF9B-63E6-4D23-8116-A0C28B9DA2A7}.Release|x64.ActiveCfg = Release|x64
+		{B404DF9B-63E6-4D23-8116-A0C28B9DA2A7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

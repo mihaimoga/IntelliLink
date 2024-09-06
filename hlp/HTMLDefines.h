@@ -34,6 +34,8 @@
 #define HIDD_ABOUTBOX                           0x20064
 #define HIDD_MFCLISTVIEW                        0x20137
 #define HIDD_LINKPROPERTIESDIALOG               0x20138
+#define HIDD_WebBrowserDlg                      0x20139
+#define HIDD_CheckForUpdatesDlg                 0x2013A
  
 // Frame Controls (IDW_*) 
 // This is a part of the Microsoft Foundation Classes C++ library.
