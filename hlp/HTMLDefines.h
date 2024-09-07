@@ -10,7 +10,6 @@
 #define HID_REMOVE                              0x18005
 #define HID_ANIMATED                            0x18005
 #define HID_MODIFY                              0x18006
-#define HID_HIDE                                0x18006
  
 // Prompts (IDP_*) 
 #define HIDP_OLE_INIT_FAILED                    0x30064

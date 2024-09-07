@@ -222,6 +222,34 @@ std::string wstring_to_utf8(const std::wstring& str)
 	return myconv.to_bytes(str);
 }
 
+char buffer[0x100] = { 0,};
+const char* GetConfigFilePath()
+{
+	TCHAR lpszDrive[_MAX_DRIVE] = { 0, };
+	TCHAR lpszDirectory[_MAX_DIR] = { 0, };
+	TCHAR lpszFilename[_MAX_FNAME] = { 0, };
+	TCHAR lpszExtension[_MAX_EXT] = { 0, };
+	TCHAR lpszFullPath[_MAX_PATH] = { 0, };
+	const DWORD nLength = _MAX_PATH;
+
+	WCHAR* lpszSpecialFolderPath = nullptr;
+	if ((SHGetKnownFolderPath(FOLDERID_Profile, 0, nullptr, &lpszSpecialFolderPath)) == S_OK)
+	{
+		std::wstring result(lpszSpecialFolderPath);
+		CoTaskMemFree(lpszSpecialFolderPath);
+		result += _T("\\ConfigLink.xml");
+		strcpy(buffer, wstring_to_utf8(result).c_str());
+		return buffer;
+	}
+
+	GetModuleFileName(nullptr, lpszFullPath, nLength);
+	_tsplitpath_s(lpszFullPath, lpszDrive, _MAX_DRIVE, lpszDirectory, _MAX_DIR, lpszFilename, _MAX_FNAME, lpszExtension, _MAX_EXT);
+	_tmakepath_s(lpszFullPath, _MAX_PATH, lpszDrive, lpszDirectory, lpszFilename, _T(".xml"));
+
+	strcpy(buffer, wstring_to_utf8(lpszFullPath).c_str());
+	return buffer;
+}
+
 bool CLinkSnapshot::LoadConfig()
 {
 	/* https://shilohjames.wordpress.com/2014/04/27/tinyxml2-tutorial/ */
@@ -232,28 +260,32 @@ bool CLinkSnapshot::LoadConfig()
 	const char* lpszURL_Name = nullptr;
 	int nPageRank = 0;
 	tinyxml2::XMLDocument xmlDocument;
-	if (xmlDocument.LoadFile(XML_CONFIGURATION) == tinyxml2::XML_SUCCESS)
+	if (xmlDocument.LoadFile(GetConfigFilePath()) == tinyxml2::XML_SUCCESS)
 	{
-		tinyxml2::XMLNode* xmlRoot = xmlDocument.FirstChild();
-		if (xmlRoot != nullptr)
+		tinyxml2::XMLNode* xmlNode = xmlDocument.FirstChild();
+		if (xmlNode != nullptr)
 		{
-			tinyxml2::XMLElement* xmlElement = xmlRoot->FirstChildElement("URL");
-			while (xmlElement != nullptr)
+			tinyxml2::XMLNode* xmlRoot = xmlNode->NextSibling();
+			if (xmlRoot != nullptr)
 			{
-				if ((xmlElement->QueryAttribute("Source", &lpszSource) == tinyxml2::XML_SUCCESS) &&
-					(xmlElement->QueryAttribute("Target", &lpszTarget) == tinyxml2::XML_SUCCESS) &&
-					(xmlElement->QueryAttribute("Name", &lpszURL_Name) == tinyxml2::XML_SUCCESS) &&
-					(xmlElement->QueryAttribute("PageRank", &nPageRank) == tinyxml2::XML_SUCCESS))
+				tinyxml2::XMLElement* xmlElement = xmlRoot->FirstChildElement("URL");
+				while (xmlElement != nullptr)
 				{
-					CString strSourceURL = utf8_to_wstring(lpszSource).c_str();
-					CString strTargetURL = utf8_to_wstring(lpszTarget).c_str();
-					CString strURL_Name = utf8_to_wstring(lpszURL_Name).c_str();
-					CLinkData* pLinkData = new CLinkData(dwLastID++, strSourceURL, strTargetURL, strURL_Name, nPageRank, false);
-					m_arrLinkList.Add(pLinkData);
+					if ((xmlElement->QueryAttribute("Source", &lpszSource) == tinyxml2::XML_SUCCESS) &&
+						(xmlElement->QueryAttribute("Target", &lpszTarget) == tinyxml2::XML_SUCCESS) &&
+						(xmlElement->QueryAttribute("Name", &lpszURL_Name) == tinyxml2::XML_SUCCESS) &&
+						(xmlElement->QueryAttribute("PageRank", &nPageRank) == tinyxml2::XML_SUCCESS))
+					{
+						CString strSourceURL = utf8_to_wstring(lpszSource).c_str();
+						CString strTargetURL = utf8_to_wstring(lpszTarget).c_str();
+						CString strURL_Name = utf8_to_wstring(lpszURL_Name).c_str();
+						CLinkData* pLinkData = new CLinkData(dwLastID++, strSourceURL, strTargetURL, strURL_Name, nPageRank, false);
+						m_arrLinkList.Add(pLinkData);
+					}
+					xmlElement = xmlElement->NextSiblingElement("URL");
 				}
-				xmlElement = xmlElement->NextSiblingElement("URL");
+				return true;
 			}
-			return true;
 		}
 	}
 	return false;
@@ -263,10 +295,11 @@ bool CLinkSnapshot::SaveConfig()
 {
 	/* https://shilohjames.wordpress.com/2014/04/27/tinyxml2-tutorial/ */
 	tinyxml2::XMLDocument xmlDocument;
+	tinyxml2::XMLNode* xmlNode = xmlDocument.InsertFirstChild(xmlDocument.NewDeclaration());
 	tinyxml2::XMLElement* xmlRoot = xmlDocument.NewElement(APPLICATION_NAME);
 	if (xmlRoot != nullptr)
 	{
-		xmlDocument.InsertFirstChild(xmlRoot);
+		xmlDocument.InsertAfterChild(xmlNode, xmlRoot);
 		const int nSize = (int)m_arrLinkList.GetSize();
 		for (int nIndex = 0; nIndex < nSize; nIndex++)
 		{
@@ -283,7 +316,7 @@ bool CLinkSnapshot::SaveConfig()
 				xmlRoot->InsertEndChild(xmlElement);
 			}
 		}
-		if (xmlDocument.SaveFile(XML_CONFIGURATION) == tinyxml2::XML_SUCCESS)
+		if (xmlDocument.SaveFile(GetConfigFilePath()) == tinyxml2::XML_SUCCESS)
 			return true;
 	}
 	return false;

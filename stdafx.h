@@ -85,7 +85,7 @@ extern CComModule _Module;
 #define MAX_URL_LENGTH 0x1000
 
 #define APPLICATION_NAME "IntelliLink"
-#define XML_CONFIGURATION "IntelliLink.xml"
+// #define XML_CONFIGURATION "IntelliLink.xml"
 
 #include <string>
 #include <sstream>
