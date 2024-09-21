@@ -20,7 +20,7 @@ IntelliLink. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include "IntelliLink.h"
 #include "CheckForUpdatesDlg.h"
 
-#include "../genUp4win/genUp4win.h"
+#include "genUp4win/genUp4win.h"
 #ifdef _DEBUG
 #pragma comment(lib, "x64/Debug/genUp4win.lib")
 #else
