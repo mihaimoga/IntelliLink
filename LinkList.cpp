@@ -229,8 +229,8 @@ const char* GetConfigFilePath()
 	TCHAR lpszDirectory[_MAX_DIR] = { 0, };
 	TCHAR lpszFilename[_MAX_FNAME] = { 0, };
 	TCHAR lpszExtension[_MAX_EXT] = { 0, };
-	TCHAR lpszFullPath[_MAX_PATH] = { 0, };
-	const DWORD nLength = _MAX_PATH;
+	TCHAR lpszFullPath[0x1000 /* _MAX_PATH */] = { 0, };
+	const DWORD nLength = 0x1000 /* _MAX_PATH */;
 
 	WCHAR* lpszSpecialFolderPath = nullptr;
 	if ((SHGetKnownFolderPath(FOLDERID_Profile, 0, nullptr, &lpszSpecialFolderPath)) == S_OK)
@@ -244,7 +244,7 @@ const char* GetConfigFilePath()
 
 	GetModuleFileName(nullptr, lpszFullPath, nLength);
 	_tsplitpath_s(lpszFullPath, lpszDrive, _MAX_DRIVE, lpszDirectory, _MAX_DIR, lpszFilename, _MAX_FNAME, lpszExtension, _MAX_EXT);
-	_tmakepath_s(lpszFullPath, _MAX_PATH, lpszDrive, lpszDirectory, lpszFilename, _T(".xml"));
+	_tmakepath_s(lpszFullPath, 0x1000 /* _MAX_PATH */, lpszDrive, lpszDirectory, lpszFilename, _T(".xml"));
 
 	strcpy(buffer, wstring_to_utf8(lpszFullPath).c_str());
 	return buffer;
