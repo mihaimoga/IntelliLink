@@ -95,4 +95,4 @@ extern CComModule _Module;
 
 #define INSTALLER_URL _T("https://www.moga.doctor/freeware/IntelliLinkSetup.msi")
 #define APPLICATION_URL _T("https://www.moga.doctor/freeware/IntelliLink.xml")
-#define USER_MANUAL_URL _T("https://www.moga.doctor/freeware/IntelliLink.html")
+#define USER_MANUAL_URL _T("https://www.moga.doctor/intellilink/")
