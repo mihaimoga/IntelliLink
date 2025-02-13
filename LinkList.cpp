@@ -222,32 +222,23 @@ std::string wstring_to_utf8(const std::wstring& str)
 	return myconv.to_bytes(str);
 }
 
-char buffer[0x100] = { 0,};
-const char* GetConfigFilePath()
+CString GetModuleFileName(_Inout_opt_ DWORD* pdwLastError = nullptr);
+const CStringA GetConfigFilePath()
 {
-	TCHAR lpszDrive[_MAX_DRIVE] = { 0, };
-	TCHAR lpszDirectory[_MAX_DIR] = { 0, };
-	TCHAR lpszFilename[_MAX_FNAME] = { 0, };
-	TCHAR lpszExtension[_MAX_EXT] = { 0, };
-	TCHAR lpszFullPath[0x1000 /* _MAX_PATH */] = { 0, };
-	const DWORD nLength = 0x1000 /* _MAX_PATH */;
-
 	WCHAR* lpszSpecialFolderPath = nullptr;
 	if ((SHGetKnownFolderPath(FOLDERID_Profile, 0, nullptr, &lpszSpecialFolderPath)) == S_OK)
 	{
 		std::wstring result(lpszSpecialFolderPath);
 		CoTaskMemFree(lpszSpecialFolderPath);
 		result += _T("\\ConfigLink.xml");
-		strcpy(buffer, wstring_to_utf8(result).c_str());
-		return buffer;
+		return wstring_to_utf8(result).c_str();
 	}
 
-	GetModuleFileName(nullptr, lpszFullPath, nLength);
-	_tsplitpath_s(lpszFullPath, lpszDrive, _MAX_DRIVE, lpszDirectory, _MAX_DIR, lpszFilename, _MAX_FNAME, lpszExtension, _MAX_EXT);
-	_tmakepath_s(lpszFullPath, 0x1000 /* _MAX_PATH */, lpszDrive, lpszDirectory, lpszFilename, _T(".xml"));
-
-	strcpy(buffer, wstring_to_utf8(lpszFullPath).c_str());
-	return buffer;
+	CString strFilePath{ GetModuleFileName() };
+	std::filesystem::path strFullPath{ strFilePath.GetString() };
+	strFullPath.replace_filename(_T("ConfigLink"));
+	strFullPath.replace_extension(_T(".xml"));
+	return wstring_to_utf8(strFullPath).c_str();
 }
 
 bool CLinkSnapshot::LoadConfig()

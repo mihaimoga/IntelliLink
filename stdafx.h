@@ -92,6 +92,7 @@ extern CComModule _Module;
 #include <iomanip>
 #include <atlsync.h>
 #include <vector>
+#include <filesystem>
 
 #define INSTALLER_URL _T("https://www.moga.doctor/freeware/IntelliLinkSetup.msi")
 #define APPLICATION_URL _T("https://www.moga.doctor/freeware/IntelliLink.xml")
