@@ -52,6 +52,10 @@
 
 #pragma once
 
+#include <__atlmfc_core.h>
+#pragma warning(push)
+#pragma warning(disable : _ATLMFC_DISABLED_WARNINGS)
+
 #ifdef _AFX_MINREBUILD
 #pragma component(minrebuild, off)
 #endif
@@ -294,5 +298,8 @@
 #ifdef _AFX_MINREBUILD
 #pragma component(minrebuild, on)
 #endif
+
+// _ATLMFC_DISABLED_WARNINGS
+#pragma warning(pop)
 
 #endif // __AFX_HH_H__

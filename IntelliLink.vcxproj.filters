@@ -413,4 +413,7 @@
   <ItemGroup>
     <Image Include="IntelliLink.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
+  </ItemGroup>
 </Project>
