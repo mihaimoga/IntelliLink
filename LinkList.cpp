@@ -29,6 +29,7 @@ DWORD CLinkSnapshot::m_dwLastID = 0;
 
 bool ProcessHTML(CString strFileName, CString strSourceURL, CString strTargetURL, CString strURLName)
 {
+	UNREFERENCED_PARAMETER(strSourceURL);
 	CString strURL;
 	CString strFileLine;
 	CString strLineMark;
