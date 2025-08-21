@@ -72,6 +72,7 @@ CMainFrame::CMainFrame()
 {
 	m_MainButton = nullptr;
 	m_pLinkView = nullptr;
+	m_nTimerID = 0;
 	m_hIcons[0] = CTrayNotifyIcon::LoadIcon(IDR_MAINFRAME);
 	m_hIcons[1] = CTrayNotifyIcon::LoadIcon(IDR_HAPPY);
 	m_hIcons[2] = CTrayNotifyIcon::LoadIcon(IDR_SAD);

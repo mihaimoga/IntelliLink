@@ -77,11 +77,9 @@ extern CComModule _Module;
 #define PAGE_RANK_LENGTH 100
 #define STATUS_LENGTH 100
 
-#define MAX_STR_LENGTH 0x1000
-#define MAX_URL_LENGTH 0x1000
+#define MAX_STR_LENGTH 0x400
 
 #define APPLICATION_NAME "IntelliLink"
-// #define XML_CONFIGURATION "IntelliLink.xml"
 
 #include <string>
 #include <sstream>
