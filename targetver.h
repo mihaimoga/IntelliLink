@@ -1,4 +1,4 @@
-/* Copyright (C) 2014-2025 Stefan-Mihai MOGA
+/* Copyright (C) 2014-2026 Stefan-Mihai MOGA
 This file is part of IntelliLink application developed by Stefan-Mihai MOGA.
 IntelliLink is an alternative Windows version to Online Link Managers!
 
