@@ -129,31 +129,38 @@ void CLinkView::ResizeListCtrl()
 		GetListCtrl().GetClientRect(&rectClient);
 
 		CMFCHeaderCtrl& pHeaderCtrl = GetListCtrl().GetHeaderCtrl();
+		const int nSourceURL = (rectClient.Width() - GetSystemMetrics(SM_CXVSCROLL)) / 4;
+		theApp.WriteInt(_T("SourceURL"), nSourceURL);
+		hdItem.cxy = nSourceURL;
 		hdItem.mask = HDI_WIDTH;
-		if (pHeaderCtrl.GetItem(0, &hdItem))
+		if (pHeaderCtrl.SetItem(0, &hdItem))
 		{
-			const int nSourceURL = hdItem.cxy;
-			theApp.WriteInt(_T("SourceURL"), nSourceURL);
+			const int nTargetURL = nSourceURL;
+			theApp.WriteInt(_T("TargetURL"), nTargetURL);
+			hdItem.cxy = nTargetURL;
 			hdItem.mask = HDI_WIDTH;
-			if (pHeaderCtrl.GetItem(1, &hdItem))
+			if (pHeaderCtrl.SetItem(1, &hdItem))
 			{
-				const int nTargetURL = hdItem.cxy;
-				theApp.WriteInt(_T("TargetURL"), nTargetURL);
+				const int nURLName = nSourceURL;
+				theApp.WriteInt(_T("URLName"), nURLName);
+				hdItem.cxy = nURLName;
 				hdItem.mask = HDI_WIDTH;
-				if (pHeaderCtrl.GetItem(2, &hdItem))
+				if (pHeaderCtrl.SetItem(2, &hdItem))
 				{
-					const int nURLName = hdItem.cxy;
-					theApp.WriteInt(_T("URLName"), nURLName);
+					const int nPageRank = ((rectClient.Width() - GetSystemMetrics(SM_CXVSCROLL)) - (nSourceURL + nTargetURL + nURLName)) / 2;
+					theApp.WriteInt(_T("PageRank"), nPageRank);
+					hdItem.cxy = nPageRank;
 					hdItem.mask = HDI_WIDTH;
-					if (pHeaderCtrl.GetItem(3, &hdItem))
+					if (pHeaderCtrl.SetItem(3, &hdItem))
 					{
-						const int nPageRank = hdItem.cxy;
-						theApp.WriteInt(_T("PageRank"), nPageRank);
+						const int nStatus = (rectClient.Width() - GetSystemMetrics(SM_CXVSCROLL)) - (nSourceURL + nTargetURL + nURLName + nPageRank);
+						theApp.WriteInt(_T("Status"), nStatus);
+						hdItem.cxy = nStatus;
 						hdItem.mask = HDI_WIDTH;
-						if (pHeaderCtrl.GetItem(4, &hdItem))
+						if (pHeaderCtrl.SetItem(4, &hdItem))
 						{
-							const int nStatus = hdItem.cxy;
-							theApp.WriteInt(_T("Status"), nStatus);
+							GetListCtrl().Invalidate();
+							GetListCtrl().UpdateWindow();
 						}
 					}
 				}
