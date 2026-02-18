@@ -40,6 +40,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_44B4A9D25F8D4B7B5005327C669A162D"
+        "OwnerKey" = "8:_8C744437FFFC4FF6892D0E71687A7227"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_4C09A419E488C97B46422A3EF6755577"
         "OwnerKey" = "8:_8C744437FFFC4FF6892D0E71687A7227"
         "MsmSig" = "8:_UNDEFINED"
@@ -313,6 +319,26 @@
             {
             "SourcePath" = "8:IMM32.dll"
             "TargetName" = "8:IMM32.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_91F2F8CD0D044568B8467531A259F534"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_44B4A9D25F8D4B7B5005327C669A162D"
+            {
+            "SourcePath" = "8:api-ms-win-crt-filesystem-l1-1-0.dll"
+            "TargetName" = "8:api-ms-win-crt-filesystem-l1-1-0.dll"
             "Tag" = "8:"
             "Folder" = "8:_91F2F8CD0D044568B8467531A259F534"
             "Condition" = "8:"
@@ -806,7 +832,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:IntelliLink"
         "ProductCode" = "8:{757032A5-5E59-4FE8-BCBD-871D32E75C17}"
-        "PackageCode" = "8:{B50ADE06-DC0F-456D-834F-B41F6C33FEA4}"
+        "PackageCode" = "8:{DF81E53C-CC98-44BF-8BB7-190ACBD2760E}"
         "UpgradeCode" = "8:{C3F63351-8016-4B2A-893A-003E83772952}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
