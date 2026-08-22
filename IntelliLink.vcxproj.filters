@@ -284,6 +284,7 @@
     <None Include="IntelliLink.html" />
     <None Include="SoftwareContentRegister.html" />
     <None Include="packages.config" />
+    <None Include="AGENTS.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IntelliLink.h">
