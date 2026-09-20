@@ -1,3 +1,6 @@
 [submodule "genUp4win"]
 	path = genUp4win
 	url = https://github.com/mihaimoga/genUp4win.git
+[submodule "tinyxml2"]
+	path = tinyxml2
+	url = https://github.com/leethomason/tinyxml2
