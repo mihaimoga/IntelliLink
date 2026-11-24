@@ -71,6 +71,45 @@
 						<li><strong>Webmaster Tools</strong>: Opens <a href="https://www.webmaster-tools.ro/" target="_blank">https://www.webmaster-tools.ro/</a> in your web browser.</li>
 					</ul>
 
+					<h2 id="roadmap">Roadmap</h2>
+					<p>This roadmap outlines where <em>IntelliLink</em> is heading. It brings together the work under way for the next release, the improvements that follow from how <em>IntelliLink</em> works today, and the maintenance work that goes into every release. Items are grouped by horizon rather than by date, and their order may change as feedback arrives or as the libraries <em>IntelliLink</em> builds on evolve, so please treat it as a statement of intent, not a promise. For everything that has already shipped, see the <a href="ReleaseNotes.html">Release Notes</a>.</p>
+					<p class="text-body-secondary"><small>Last reviewed: November 2026 (version 1.28 in development).</small></p>
+
+					<h3>Now <small class="text-body-secondary fw-normal">in progress and ongoing</small></h3>
+					<ul>
+						<li><strong>Up-to-date components</strong>: each release picks up the latest Microsoft Edge WebView2 (embedded browser) and genUp4win (automatic updates) and, as new versions are published, TinyXML2 (link storage), Bootstrap (help and release notes pages) and PJ Naughter's MFC components.</li>
+						<li><strong>Update experience</strong>: version 1.28 keeps the <em>Check for Updates</em> dialog open when no new version is found, and exits the application after launching an available installer so that its files can be replaced. It builds on the SHA-256 verification of downloaded installers (version 1.26) and the download progress reporting (version 1.27).</li>
+						<li><strong>Stability, security and performance</strong>: bug fixes, security updates and performance tuning continue alongside new features.</li>
+					</ul>
+
+					<h3>Next <small class="text-body-secondary fw-normal">planned, next in line</small></h3>
+					<ul>
+						<li><strong>Faster, non-blocking Refresh</strong>: today the links are checked one after another on the main thread, and the source page of every link is downloaded twice per check (once to fill the Status column and once to choose the tray icon). <em>IntelliLink</em> runs this check at startup, every 10 minutes and whenever you choose Refresh. The plan is to download each page only once, run the checks in the background so that the window stays responsive, and report progress in the status bar.</li>
+						<li><strong>Clearer link status</strong>: the Status column only shows Verified, Error or Unknown. The plan is to also show why a check failed (the page could not be downloaded, or the link was not found on it) and when the link was last checked.</li>
+					</ul>
+
+					<h3>Later <small class="text-body-secondary fw-normal">planned, larger efforts</small></h3>
+					<ul>
+						<li><strong>More reliable link detection</strong>: today <em>IntelliLink</em> looks for an <code>href</code> attribute in double quotes that equals the target URL, followed by the exact anchor text on the same line. Reading the page as real HTML would also cover single-quoted attributes, anchors that span several lines or contain other markup, and HTML entities such as <code>&amp;amp;</code>.</li>
+						<li><strong>Change notifications</strong>: a tray balloon when a link changes from Verified to Error, instead of only switching the tray icon from happy to sad. The tray component used by <em>IntelliLink</em> already supports balloons.</li>
+					</ul>
+					<p>Clearer status and change notifications need the same groundwork as the faster Refresh (a background check that returns a detailed result), which is why the faster Refresh comes first.</p>
+
+					<h3>Under consideration <small class="text-body-secondary fw-normal">ideas, not yet committed</small></h3>
+					<ul>
+						<li><strong>Page Rank column</strong>: the value is read from <code>ConfigLink.xml</code>, but the Add and Modify dialogs have no field for it and new links start at 0. It could become editable, or be replaced by something that can be measured, such as the response time of the source page.</li>
+						<li><strong>Configurable refresh interval</strong>: the 10-minute interval is fixed in the program. A setting could change it, or turn the automatic check off and leave only the manual Refresh.</li>
+						<li><strong>Import and export</strong>: exchange the list of links with other tools, for example as CSV, instead of editing <code>ConfigLink.xml</code> by hand.</li>
+						<li><strong>Fully portable edition</strong>: the zip edition still keeps the link list (<code>ConfigLink.xml</code>) in the user profile folder and the window layout in the registry. An option to keep both next to the executable would make it fully portable.</li>
+						<li><strong>Link attributes</strong>: show the <code>rel</code> attribute of a link (for example <code>nofollow</code>, <code>sponsored</code> or <code>ugc</code>) next to its status.</li>
+						<li><strong>Localized user interface</strong>: genUp4win already supports several languages, but the <em>IntelliLink</em> user interface is English only.</li>
+						<li><strong>Native ARM64 and high-DPI support</strong>: a native ARM64 build for Windows on Arm devices (<em>IntelliLink</em> is currently built for x86 and x64) and Per-Monitor V2 DPI awareness for a sharper interface on high-DPI and mixed-DPI displays.</li>
+						<li><strong>Continuous integration and automated tests</strong>: build all four configurations (Debug and Release, x86 and x64) on every push and pull request, and test the link check without running the application. Neither exists in the repository today.</li>
+					</ul>
+
+					<h3>Help shape the roadmap</h3>
+					<p>Want to see something sooner, or have an idea that is not listed here? <a href="https://github.com/mihaimoga/IntelliLink/issues" target="_blank">Open an issue</a> or start a conversation in <a href="https://github.com/mihaimoga/IntelliLink/discussions" target="_blank">Discussions</a>. Contributions are welcome as well: any item above can be picked up through a pull request, as described in the next section. Please note that a pull request for an enhancement is merged only after its issue has been approved by a project administrator and carries the <code>Accepted</code> label, so it is best to open an issue and discuss the idea before you start.</p>
+
 					<h2>Create and Submit your Pull Request</h2>
 					<p>As noted in the <a href="https://github.com/mihaimoga/IntelliLink/blob/main/CONTRIBUTING.md" target="_blank">Contributing Rules</a> for <em>IntelliLink</em>, all Pull Requests need to be attached to a issue on GitHub. So the first step is to create an issue which requests that the functionality be improved (if it was already there) or added (if it was not yet there); in your issue, be sure to explain that you have the functionality definition ready, and will be submitting a Pull Request. The second step is to use the GitHub interface to create the Pull Request from your fork into the main repository. The final step is to wait for and respond to feedback from the developers as needed, until such time as your PR is accepted or rejected.</p>
 				</div>
